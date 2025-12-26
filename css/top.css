@@ -1,0 +1,341 @@
+@charset "UTF-8";
+/*mixin
+-------------------------*/
+.body {
+  color: #000;
+}
+
+.span {
+  background-image: url("../img/1.jpg");
+  background-size: cover;
+  background-position: center;
+  display: block;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+}
+.span__nav {
+  color: #fff;
+  position: relative;
+  z-index: 2;
+  top: 20%;
+  left: 15%;
+}
+@media screen and (min-width: 960px) {
+  .span__nav {
+    top: 23%;
+    left: 15%;
+  }
+}
+.span__nav h1 {
+  font-size: 1.25rem;
+}
+@media screen and (min-width: 960px) {
+  .span__nav h1 {
+    font-size: 1.6875rem;
+    padding-top: 1.4814814815em;
+  }
+}
+.span__nav p {
+  font-size: 0.75rem;
+}
+.span__namber {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 18px;
+  margin-top: 2.5em;
+}
+.span__line {
+  width: 100px;
+  height: 1px;
+  background-color: #fff;
+  display: inline-block;
+}
+.span__Category {
+  padding-top: 2.1875em;
+  align-items: center;
+  gap: 135px;
+}
+.span__more {
+  padding-top: 3.4375rem;
+  text-decoration: underline;
+}
+@media screen and (min-width: 960px) {
+  .span__scroll {
+    padding-top: 10.625em;
+    margin-left: 7.5em;
+  }
+}
+
+.half__black__filter {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+@media screen and (min-width: 960px) {
+  .half__black__filter {
+    width: 50vw;
+    background: rgba(0, 0, 0, 0.4);
+  }
+}
+
+/*　スクロールダウンの実装
+------------------------------*/
+.span__scroll {
+  position: relative;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin-top: 70px;
+}
+.span__scroll::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50px;
+  width: 1px;
+  height: 100px;
+  background: #fff;
+  -webkit-animation: scroll 2s infinite;
+          animation: scroll 2s infinite;
+  transform: translateX(-50%);
+}
+
+@-webkit-keyframes scroll {
+  0% {
+    transform: scale(1, 0);
+    transform-origin: 0 0;
+  }
+  50% {
+    transform: scale(1, 1);
+    transform-origin: 0 0;
+  }
+  51% {
+    transform: scale(1, 1);
+    transform-origin: 0 100%;
+  }
+  100% {
+    transform: scale(1, 0);
+    transform-origin: 0 100%;
+  }
+}
+
+@keyframes scroll {
+  0% {
+    transform: scale(1, 0);
+    transform-origin: 0 0;
+  }
+  50% {
+    transform: scale(1, 1);
+    transform-origin: 0 0;
+  }
+  51% {
+    transform: scale(1, 1);
+    transform-origin: 0 100%;
+  }
+  100% {
+    transform: scale(1, 0);
+    transform-origin: 0 100%;
+  }
+}
+/*　スクロールダウンの実装ここまで！！！！
+------------------------------*/
+/* こっからわーくす！！！！
+------------------------------*/
+.works {
+  padding-top: 6.25em;
+  width: 95%;
+  max-width: 15000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media screen and (min-width: 960px) {
+  .works {
+    padding-top: 12.5em;
+  }
+}
+.works__title {
+  font-size: 1.875rem;
+  margin-bottom: 0.5em;
+}
+.works__tag__all {
+  padding-top: 1.875em;
+  padding-bottom: 5em;
+  display: flex;
+  flex-wrap: wrap;
+  text-align: center;
+  gap: 0.5rem;
+}
+@media screen and (min-width: 960px) {
+  .works__tag__all {
+    padding-top: 2.5em;
+    padding-bottom: 6.25em;
+  }
+}
+.works__tag__all .works__tag-link {
+  display: inline-block;
+  text-align: center;
+  font-size: 0.875rem;
+  box-sizing: border-box;
+  transition: opacity 0.2s;
+  position: relative;
+  padding: 0 1em;
+}
+.works__tag__all .works__tag-link:not(.works__tag-current):hover::before {
+  content: "『  ";
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.works__tag__all .works__tag-link:not(.works__tag-current):hover::after {
+  content: "  』";
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.works .works__tag-current::before {
+  content: "「 ";
+}
+.works .works__tag-current::after {
+  content: " 」";
+}
+.works__posts {
+  display: flex;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+}
+@media screen and (min-width: 960px) {
+  .works__posts {
+    gap: 1.25rem;
+  }
+}
+.works__post {
+  width: 31%;
+  padding-bottom: 1.875em;
+  background: #fff;
+  border-radius: 0.5em;
+}
+@media screen and (min-width: 960px) {
+  .works__post {
+    width: 22%;
+    padding-bottom: 5em;
+  }
+}
+.works__post a {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+.works__post h2 {
+  padding-top: 0.625em;
+  font-size: 0.875rem;
+}
+.works__post p {
+  font-size: 0.625rem;
+  color: #888;
+}
+@media screen and (min-width: 390px) {
+  .works__post p {
+    font-size: 0.75rem;
+  }
+}
+.works__img {
+  aspect-ratio: 2/3;
+  -o-object-fit: cover;
+     object-fit: cover;
+  display: block;
+  position: relative;
+}
+.works__img img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  display: block;
+  filter: grayscale(100%);
+}
+.works__img :hover {
+  filter: grayscale(0%);
+  transition: 0.5s;
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 1s ease-out, transform 1s ease-out;
+}
+.fade-in.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* こっからわーくすおわり！！！！
+------------------------------*/
+.footer {
+  border-top: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.footer__inner {
+  width: 95%;
+  max-width: 15000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.footer__address {
+  font-size: 1rem;
+}
+.footer__address-line {
+  margin: 0 0 0.5em 0;
+  font-size: 0.875rem;
+}
+.footer__right {
+  flex: 1;
+  min-width: 13.75em;
+  line-height: 1.8;
+  text-align: right;
+  font-size: 1rem;
+}
+.footer__nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.625em 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.footer__nav-item {
+  margin-bottom: 0.3125;
+}
+.footer__nav-link {
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  color: inherit;
+  font-size: 0.875rem;
+  transition: opacity 0.2s;
+}
+.footer__nav-link:hover {
+  opacity: 0.7;
+}
+.footer__copy {
+  font-size: 0.75rem;
+  color: #555;
+  margin-top: 0.8333333333;
+}
+.footer__address {
+  flex: 1;
+  font-size: 1rem;
+  padding-top: 3.9em;
+}
+.footer__address-line {
+  margin: 0 0 0.5em 0;
+  font-size: 0.875rem;
+}
+/*# sourceMappingURL=top.css.map */

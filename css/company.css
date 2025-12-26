@@ -1,0 +1,207 @@
+/*mixin
+-------------------------*/
+boby {
+  font-size: 0.875rem;
+}
+
+/*philosophy
+-------------------------*/
+.philosophy {
+  width: 100%;
+  padding-top: 9.375em;
+  padding-bottom: 5em;
+}
+@media screen and (min-width: 768px) {
+  .philosophy {
+    width: 90%;
+  }
+}
+@media screen and (min-width: 960px) {
+  .philosophy {
+    width: 80%;
+  }
+}
+.philosophy__text {
+  line-height: 2;
+  position: relative;
+  padding: 7.5em 1.875em;
+  color: #fff;
+  overflow: hidden;
+  z-index: 1;
+}
+@media screen and (min-width: 768px) {
+  .philosophy__text {
+    padding: 7.5em 3.125em;
+  }
+}
+@media screen and (min-width: 960px) {
+  .philosophy__text {
+    padding: 7.5em 6.25em;
+  }
+}
+.philosophy__text::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url(../img/rinenBg.png) no-repeat center center/cover;
+  transition: filter 1s ease;
+  filter: blur(0px);
+  z-index: -1;
+}
+.philosophy__text.scrolled::before {
+  filter: blur(6px);
+}
+.philosophy__title {
+  font-size: 1.5rem;
+  margin-bottom: 1.875em;
+}
+@media screen and (min-width: 768px) {
+  .philosophy__title {
+    font-size: 2rem;
+  }
+}
+.philosophy__sentence {
+  font-size: 1rem;
+  margin-bottom: 3.125em;
+}
+
+.philosophy__text.scrolled::before {
+  filter: blur(6px);
+}
+
+.philosophy__title,
+.philosophy__sentence {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1s ease;
+}
+
+.philosophy__text.scrolled .philosophy__title,
+.philosophy__text.scrolled .philosophy__sentence {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/*office
+-------------------------*/
+.office {
+  width: 90%;
+  margin-left: auto;
+  padding: 10em 0 20.625em;
+}
+@media screen and (min-width: 768px) {
+  .office {
+    width: 70%;
+  }
+}
+@media screen and (min-width: 960px) {
+  .office {
+    width: 50%;
+  }
+}
+.office__title {
+  display: block;
+  position: relative;
+  font-size: 2rem;
+  letter-spacing: 0.2em;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin-bottom: 3.125em;
+}
+.office__title::before {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 1px;
+  background-color: #333;
+  top: 50%;
+  right: -110px;
+}
+
+.activities {
+  margin-bottom: 6.875em;
+}
+.activities__title {
+  font-size: 1.25rem;
+  letter-spacing: 0.2em;
+  margin-bottom: 2.5em;
+}
+.activities__item {
+  margin-bottom: 0.9375em;
+}
+
+.summary__title {
+  font-size: 1.25rem;
+  letter-spacing: 0.2em;
+  margin-bottom: 2.5em;
+}
+.summary__list {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+}
+.summary__term {
+  padding: 25px 10px 25px 0;
+}
+.summary__desc {
+  border-left: #000 solid 1px;
+  padding: 1.5625em 0.625em 0 1.875em;
+}
+
+.question {
+  width: 94%;
+  max-width: 15000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.question__title {
+  position: relative;
+  font-size: 1.625rem;
+  text-align: center;
+  border-bottom: #000 solid 1px;
+  padding-bottom: 1.1538461538em;
+}
+.question__title::before, .question__title::after {
+  content: "";
+  position: absolute;
+  bottom: -45px;
+  width: 1px;
+  height: 30px;
+  background-color: #000;
+}
+.question__title::before {
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  transform-origin: center bottom;
+}
+.question__title::after {
+  left: 50%;
+  transform: translateX(-50%) rotate(-45deg);
+  transform-origin: center bottom;
+}
+.question__list {
+  padding-top: 7.5em;
+}
+@media screen and (min-width: 768px) {
+  .question__list {
+    padding: 11.25em 7.5em 11.25em;
+  }
+}
+.question__term {
+  margin-bottom: 1.875em;
+}
+@media screen and (min-width: 768px) {
+  .question__term {
+    margin-bottom: 2.5em;
+  }
+}
+.question__desc {
+  margin-left: 1.875em;
+  margin-bottom: 5em;
+}
+@media screen and (min-width: 768px) {
+  .question__desc {
+    margin-left: 5em;
+  }
+}
+/*# sourceMappingURL=company.css.map */

@@ -1,0 +1,126 @@
+/*mixin
+-------------------------*/
+main {
+  margin-bottom: 100px;
+  margin-top: 40px;
+}
+@media screen and (min-width: 960px) {
+  main {
+    margin-left: 100px;
+    margin-top: 100px;
+  }
+}
+
+.contact {
+  max-width: 720px;
+  padding: 0 1rem;
+  background: white;
+}
+.contact__title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+.contact__desc {
+  font-size: 0.875rem;
+  margin-bottom: 80px;
+}
+@media screen and (min-width: 960px) {
+  .contact__desc {
+    margin-bottom: 10rem;
+  }
+}
+.contact__form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.form-section {
+  padding-bottom: 50px;
+}
+.form-section__title {
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+.form-section label {
+  display: block;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+.form-section input,
+.form-section textarea {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.form-section__radio {
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+.form-section__radio label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding-right: 30px;
+}
+.form-section__radio label input[type=radio] {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #000;
+  border-radius: 50%;
+  position: relative;
+}
+.form-section__radio label input[type=radio]:checked::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 8px;
+  height: 8px;
+  background: #000;
+  border-radius: 50%;
+}
+.form-section__radio--wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+.form-section__radio--wrap label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.form-section__checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+.form-section__checkbox input {
+  all: revert;
+}
+
+.submit-button {
+  width: 100px;
+  padding: 0.5rem;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  align-self: flex-start;
+  text-align: center;
+}
+/*# sourceMappingURL=contact.css.map */

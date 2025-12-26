@@ -1,0 +1,381 @@
+@charset "UTF-8";
+
+$breakpoints: (
+    "mobile": "screen and (min-width: 390px)",
+    "tablet": "screen and (min-width: 768px)",
+    "desktop": "screen and (min-width: 960px)",
+    ) !default;
+
+/*mixin
+-------------------------*/
+@mixin m-query($breakpoint) {
+    @media #{map-get($breakpoints, $breakpoint)} {
+        @content;
+    }
+}
+
+@mixin m-inner($w: 94%, $mw: 15000px) {
+    width: $w;
+    max-width: $mw;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@mixin m-flex($a: center, $j: space-between) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: $j;
+    align-items: $a;
+}
+
+@function f-rem($value) {
+    @return ($value/16)+rem;
+}
+
+main {
+    @include m-inner(
+);
+}
+
+body {
+    position: relative;
+    z-index: 0;
+
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    // background-image: url(../img/mokume.webp);
+    // background-position: 20% 60%;
+    // background-repeat: no-repeat;
+    // background-size: 100%;
+    transform: scaleX(-1);
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.2;
+}
+
+
+// profile
+
+.profile {
+
+
+    //about
+    .box {
+
+        padding-top: (40em/16);
+        padding-bottom: (70em/16);
+
+        @include m-query(desktop) {
+            @include m-flex(flex-end);
+        }
+    }
+
+
+    .boxs {
+        display: block;
+        font-size: f-rem(14);
+
+        @include m-query(desktop) {
+            @include m-flex();
+            flex-wrap: nowrap;
+        }
+
+    }
+
+
+    .abouttwo {
+        width: 100%;
+
+        @include m-query(desktop) {
+            width: 60%;
+            padding-bottom: (70em/16);
+
+        }
+    }
+
+    .boxone {
+        width: 60%;
+    }
+
+
+    //career
+    .career {
+        padding-bottom: (100em/16);
+        padding-top: (0em/16);
+
+        &__title {
+            padding-bottom: (20em/16);
+
+        }
+
+        &__list {
+            //          border-left: 1px solid black;
+            //           display: grid;
+            //           grid-template-columns: 100px 1fr; // ← 年数を固定幅に
+            //          row-gap: 0.5em;
+            //          column-gap: 1em;
+
+
+            //            dt {
+            //   padding-left: (40em/16);
+
+            //     white-space: nowrap;
+            //   }
+
+            //   dd {
+            //     margin: 0;
+            //   }
+
+            position: relative;
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            row-gap: 0.5em;
+            column-gap: 1em;
+            padding-left: 1px;
+
+            &::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 1px;
+                height: 0;
+                background-color: black;
+                transition: height 1.2s ease-out;
+            }
+
+            &.is-visible::before {
+                height: 100%;
+            }
+
+            dt {
+                padding-left: (40em / 16);
+                white-space: nowrap;
+            }
+
+            dd {
+                margin: 0;
+            }
+        }
+    }
+
+    @keyframes lineGrow {
+        from {
+            height: 0;
+        }
+
+        to {
+            height: 100%;
+        }
+    }
+
+    //awards
+    .awards {
+        &__title {
+            padding-bottom: (20em/16);
+        }
+
+        &__list {
+            list-style: none;
+            padding-bottom: (80em/16);
+
+            @include m-query(desktop) {
+                padding-left: 0;
+
+            }
+
+            li {
+                padding-bottom: (10em/16);
+            }
+        }
+    }
+
+}
+
+.about {
+    width: 100%;
+    position: relative;
+
+    @include m-query(desktop) {
+        width: 40%;
+    }
+
+    &__label {
+        position: absolute;
+        top: 10%;
+        transform: rotate(90deg);
+        font-size: f-rem(16);
+
+        @include m-query(desktop) {
+
+            top: (70em/16);
+            left: (20em/16);
+            font-size: f-rem(18);
+
+
+        }
+    }
+
+    &__container {
+        width: 132px;
+        position: absolute;
+        bottom: 14%;
+        left: 60%;
+
+        @include m-query(tablet) {
+            bottom: 14%;
+            left: 45%;
+        }
+
+        @include m-query(desktop) {
+            bottom: 14%;
+            left: 62%;
+        }
+
+    }
+
+    &__comment {
+
+
+        padding-bottom: (100em/16);
+
+        @include m-query(desktop) {
+            padding-bottom: 0;
+        }
+    }
+
+
+    &__occupation {
+        font-size: f-rem(14);
+    }
+
+    &__name {
+        font-size: f-rem(22);
+        margin-bottom: (2em/16);
+
+        @include m-query(desktop) {
+            font-size: f-rem(28);
+            margin-bottom: (10em/16);
+
+        }
+    }
+}
+
+
+//profiles
+.profiles {
+    padding-bottom: (50em/16);
+    width: 100%;
+
+    @include m-query(desktop) {
+
+        margin-bottom: (200em/16);
+        padding-top: (150em/16);
+        width: 40%;
+        align-items: center;
+    }
+
+    &__container {
+        display: block;
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 1s ease, transform 1s ease;
+
+        &.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @include m-query(desktop) {
+            @include m-flex();
+
+        }
+    }
+
+
+    .profile {
+        &__post {
+            width: 100%;
+        }
+    }
+
+
+
+    // .about {
+    //     position: relative;
+
+
+    //     &__label {
+    //         position: absolute;
+    //         top: (45em/16);
+    //         left: (0em/16);
+    //         transform: rotate(90deg);
+
+
+    //         @include m-query(desktop) {
+    //             top: (60em/16);
+    //             left: (10em/16);
+    //             font-size: f-rem(18);
+
+    //         }
+    //     }
+
+    //     &__container {
+    //         position: absolute;
+    //         bottom: (47em/16);
+    //         left: (190em/16);
+
+
+    //         @include m-query(desktop) {
+    //             bottom: (68em/16);
+    //             left: (290em/16);
+
+    //         }
+
+    //     }
+
+    //     &__name {
+    //         font-size: f-rem(22);
+
+
+    //         @include m-query(desktop) {
+    //             font-size: f-rem(32);
+
+
+    //         }
+    //     }
+
+    //     &__occupation {
+    //         font-size: f-rem(14);
+    //     }
+
+    //     &__img {
+    //         width: 80%;
+    //     }
+
+    //     &__comment {
+
+    //         margin-top: (20em/16);
+
+    //     }
+
+
+    //     ul {
+    //         list-style: none;
+    //         padding-left: 0;
+
+    //         li {
+    //             padding-bottom: (10em/16);
+    //         }
+    //     }
+
+    // }
+}

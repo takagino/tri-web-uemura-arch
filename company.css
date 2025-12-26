@@ -1,0 +1,115 @@
+@charset "UTF-8";
+
+/* main */
+.philosophy {
+    width: 100%;
+    display: flex;
+}
+
+.philosophy-text {
+    line-height: 2;
+    position: relative;
+    padding: 120px 100px;
+    color: #fff;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.philosophy-text::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url(../img/rinenBg.png) no-repeat center center / cover;
+    transition: filter 1s ease;
+    filter: blur(0px);
+    z-index: -1;
+}
+
+.philosophy-text.scrolled::before {
+    filter: blur(6px);
+}
+
+.philosophy-text h2,
+.philosophy-text p {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 1s ease;
+}
+
+.philosophy-text.scrolled h2,
+.philosophy-text.scrolled p {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.philosophy-text h2 {
+    font-size: 32px;
+    margin-bottom: 60px;
+}
+
+.philosophy-text p {
+    font-size: 16px;
+    margin-bottom: 50px;
+}
+
+/*office*/
+.office {
+    width: 50%;
+    margin-left: auto;
+    padding: 160px 0 330px;
+}
+
+.office h2 {
+    display: block;
+    position: relative;
+    font-size: 32px;
+    letter-spacing: 0.2em;
+    width: fit-content;
+    margin-bottom: 100px;
+}
+
+.office h2::before {
+    content: "";
+    position: absolute;
+    width: 100px;
+    height: 1px;
+    background-color: #333;
+    top: 50%;
+    right: -110px;
+}
+
+.office h3 {
+    font-size: 20px;
+    letter-spacing: 0.2em;
+    margin-bottom: 50px;
+}
+
+.office li {
+    margin-bottom: 15px;
+}
+
+.activities {
+    margin-bottom: 110px;
+}
+
+.summary {
+    position: relative;
+}
+
+.summary h3 {
+    margin-bottom: 50px;
+}
+
+.summary dl {
+    display: grid;
+    grid-template-columns: 115px 1fr;
+}
+
+.summary dt {
+    padding: 25px 50px 25px 0;
+}
+
+.summary dd {
+    border-left: #000 solid 1px;
+    padding: 25px 50px;
+}

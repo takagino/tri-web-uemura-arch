@@ -1,0 +1,281 @@
+@charset "UTF-8";
+
+// ・スマホ版ファーストで作る！
+// ・font-size:f-rem(値);　で書く！
+// ・margin:(値em/font-size);
+
+$breakpoints: (
+    "mobile": "screen and (min-width: 390px)",
+    "tablet": "screen and (min-width: 768px)",
+    "desktop": "screen and (min-width: 960px)",
+    ) !default;
+
+/*mixin
+-------------------------*/
+@mixin m-query($breakpoint) {
+    @media #{map-get($breakpoints, $breakpoint)} {
+        @content;
+    }
+}
+
+@mixin m-inner($w: (1200/1440)*100%, $mw: 1340px) {
+    width: $w;
+    max-width: $mw;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@mixin m-flex($a: center, $j: space-between) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: $j;
+    align-items: $a;
+}
+
+@function f-rem($value) {
+    @return ($value/16)+rem;
+}
+
+body {
+    font-size: f-rem(16
+    );
+letter-spacing: 0.15em;
+line-height: 1.7;
+color: #595959;
+font-family: Helvetica, Arial, sans-serif;
+}
+
+// .main{
+//     &__inner{
+//         width: 90%;
+//         margin: 0 auto;
+
+//         @include m-inner;
+//     }
+// }
+
+.content {
+    &__top {
+        @include m-inner;
+        padding-top: (120em/16);
+        padding-bottom: (120em/16);
+    }
+
+    &__title {
+        font-size: f-rem(23);
+    }
+
+    &__category {
+        font-size: f-rem(14);
+        color: #c2c2c2;
+    }
+
+    &__thumbnail {
+        width: 95%;
+        aspect-ratio: 16/9;
+        object-fit: cover;
+
+        @include m-query(desktop) {
+            width: 90%;
+            aspect-ratio: 22/9;
+        }
+    }
+
+    &__text {
+        @include m-inner;
+        font-size: f-rem(16);
+        padding: (100em/16) 0;
+
+        @include m-query(desktop) {
+            display: flex;
+            justify-content: space-between;
+            padding: (200em/16) 0;
+        }
+    }
+
+    &__explain {
+        width: 95%;
+        padding-bottom: (50em/16);
+
+        @include m-query(desktop) {
+            padding-bottom: 0;
+            width: 45%;
+        }
+    }
+
+    &__detail {
+        width: 65%;
+        margin-left: auto;
+
+        @include m-query(desktop) {
+            width: 25%;
+        }
+    }
+
+    &__list {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__list dt {
+        color: #c2c2c2;
+    }
+
+    &__right {
+        // text-align: right;
+        display: block;
+    }
+
+    &__picture {
+        display: flex;
+        object-fit: cover;
+        width: 100%;
+
+        @include m-query(desktop) {
+
+            width: 90%;
+        }
+    }
+
+    &__flex {
+        width: 33.33%;
+    }
+
+    &__img {
+        margin-bottom: -10px;
+        width: 100%;
+    }
+}
+
+.modal {
+    display: none;
+    /* 初期状態は非表示 */
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+
+    align-items: center;
+    justify-content: center;
+
+    &__content {
+        display: block;
+        margin: auto;
+        width: 65%;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        object-fit: cover;
+    }
+
+    &__close {
+        position: absolute;
+        top: 30px;
+        right: 40px;
+        color: #fff;
+        font-size: f-rem(60);
+        cursor: pointer;
+    }
+
+    &__nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 48px;
+        color: white;
+        cursor: pointer;
+        user-select: none;
+        z-index: 1000;
+        padding: 0 15px;
+    }
+
+    &__nav--prev {
+        left: 20px;
+    }
+
+    &__nav--next {
+        right: 20px;
+    }
+
+    &__nav.hidden {
+        display: none;
+    }
+}
+
+.more {
+    width: 85%;
+    margin: (80em/16) 0 (80em/16) auto;
+    background-color: #ededed;
+    padding: (50em/16) 0;
+
+    @include m-query(desktop) {
+        padding: (80em/16) 0;
+        margin-top: (250em/16);
+        margin-bottom: (250em/16);
+    }
+
+    &__title {
+        position: relative;
+        font-size: f-rem(20);
+        margin-bottom: (30em / 16);
+        padding-left: (60em/16);
+
+        &::after {
+            content: "";
+            position: absolute;
+            bottom: -8px; // テキストとの距離（調整可）
+            left: 0; // 左寄せしたいなら left: 0
+            width: (160em / 16); // ← 線の長さ（ここで調整）
+            height: 1.5px;
+            background-color: #c2c2c2;
+        }
+
+
+
+
+        @include m-query(desktop) {
+            margin-bottom: (50em/16);
+        }
+    }
+
+    &__wrapper {
+        overflow: hidden;
+        position: relative;
+    }
+
+    &__flex {
+        display: flex;
+        white-space: nowrap;
+        will-change: transform;
+    }
+
+    &__link {
+        flex: 0 0 auto;
+        width: 180px;
+        padding-right: (20em/16);
+        text-align: center;
+
+        @include m-query(desktop) {
+            width: 200px;
+            padding-right: (40em/16);
+        }
+
+        &:hover {
+            opacity: 0.7;
+            transition: 0.3s;
+        }
+    }
+
+    &__img {
+        width: 100%;
+        aspect-ratio: 2 / 3;
+        object-fit: cover;
+    }
+
+    &__one {
+        font-size: f-rem(14);
+        margin-top: (10em/16);
+    }
+}
