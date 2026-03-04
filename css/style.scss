@@ -121,7 +121,7 @@ body {
   font-size: rem(16);
   font-family: $font-family-gothic;
   font-weight: 400;
-  line-height: 1.7;
+  line-height: 1.85;
   letter-spacing: 0.15em;
 }
 
@@ -132,6 +132,12 @@ img {
 }
 
 .header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+
   &__inner {
     @include inner();
     padding: $space-m 0;
@@ -140,10 +146,37 @@ img {
   &__title {
     position: relative;
     z-index: 9999;
-    width: 200px;
+    width: 240px;
 
     @include mq(tablet) {
       width: 280px;
+    }
+  }
+
+  &.is-top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+  }
+
+  &__logo--white {
+    display: none;
+  }
+}
+
+body.home:not(:has(.hamburger[aria-expanded='true'])) {
+  .header:not(.is-scrolled) {
+    .header__logo--default {
+      display: none;
+    }
+    .header__logo--white {
+      display: block;
+    }
+
+    .hamburger__line {
+      background-color: #fff;
     }
   }
 }
@@ -212,7 +245,7 @@ body:has(.hamburger[aria-expanded='true']) {
   inset: 0;
   width: 100%;
   height: 100dvh;
-  background-color: rgb(255 255 255 / 98%);
+  background-color: rgb(255 255 255 / 90%);
   z-index: 900;
   opacity: 0;
   visibility: hidden;
@@ -348,8 +381,220 @@ body:has(.hamburger[aria-expanded='true']) {
 // =================================================================
 //  Front-page
 // =================================================================
-.philosophy {
-  padding-bottom: $space-xxl;
+.hero {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background-color: #000;
+
+  &__slide {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-left: 10%;
+  }
+
+  // 背景画像のズームアウトフェード
+  &__image {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.1);
+      opacity: 0;
+      transition:
+        transform 8s ease-out,
+        opacity 1.5s ease-in;
+    }
+  }
+
+  // Swiperのアクティブ時
+  .swiper-slide-active &__image img {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+
+  &__content {
+    color: #fff;
+    max-width: 600px;
+  }
+
+  // テキストのマスクアニメーション
+  [data-animate] {
+    overflow: hidden;
+    display: block;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: 1s cubic-bezier(0.2, 1, 0.2, 1);
+  }
+
+  .swiper-slide-active [data-animate] {
+    opacity: 1;
+    transform: translateY(0);
+
+    // 順次表示（ディレイ）
+    &:nth-child(1) {
+      transition-delay: 0.5s;
+    } // works
+    &:nth-child(2) {
+      transition-delay: 0.7s;
+    } // title
+    &:nth-child(3) {
+      transition-delay: 0.8s;
+    } // tags
+    &:nth-child(4) {
+      transition-delay: 0.9s;
+    } // view more
+  }
+
+  &__tips {
+    margin-bottom: $space-s;
+    font-size: rem(14);
+  }
+
+  &__title {
+    margin-bottom: $space-xs;
+    font-size: rem(32);
+    font-weight: bold;
+  }
+
+  &__category {
+    margin-bottom: $space-l;
+    font-size: rem(14);
+
+    span:not(:last-child)::after {
+      content: ', ';
+    }
+  }
+
+  &__link {
+    display: inline-block;
+    color: #fff;
+    text-decoration: none;
+    border-bottom: 1px solid #fff;
+    padding-bottom: rem(3);
+    font-size: rem(14);
+  }
+
+  &__controls {
+    position: absolute;
+    left: 10%;
+    bottom: 10%;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: #fff;
+  }
+
+  &__bar {
+    position: relative;
+    width: 100px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+
+    &-inner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 0;
+      background: #fff;
+    }
+  }
+
+  &__next {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 0;
+    font-family: inherit;
+    transition: opacity 0.3s;
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+
+  &__scroll {
+    position: absolute;
+    right: 8%;
+    bottom: 0;
+    z-index: 20;
+    color: #fff;
+
+    &-link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+      transition: opacity 0.3s;
+
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+
+    &-text {
+      font-size: rem(12);
+      text-transform: uppercase;
+      writing-mode: vertical-rl;
+      margin-bottom: $space-s;
+    }
+
+    &-line {
+      position: relative;
+      width: 1px;
+      height: rem(80);
+      background-color: rgba(255, 255, 255, 0.2);
+      overflow: hidden;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        animation: scroll-line 2.5s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+      }
+    }
+  }
+}
+
+@keyframes scroll-line {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  45% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  55% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
+.js-hero-slider {
+  height: 100%;
+}
+
+.concept {
+  padding: $space-xxl 0;
 
   &__inner {
     @include inner(rem(750));

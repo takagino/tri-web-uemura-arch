@@ -9,11 +9,12 @@
 </head>
 
 <body <?php body_class(); ?>>
-  <header class="header">
+  <header class="header <?php echo esc_attr(is_front_page() ? 'is-top' : ''); ?>">
     <div class="header__inner">
       <h1 class="header__title">
         <a href="<?php echo esc_url(home_url('/')); ?>">
-          <img src="<?php echo esc_url(get_theme_file_uri('/img/logomobile.webp')); ?>" alt="植村康平建築設計事務所">
+          <img class="header__logo header__logo--default" src="<?php echo esc_url(get_theme_file_uri('/img/logo.webp')); ?>" alt="植村康平建築設計事務所">
+          <img class="header__logo header__logo--white" src="<?php echo esc_url(get_theme_file_uri('/img/logowhite.png')); ?>" alt="植村康平建築設計事務所">
         </a>
       </h1>
 
