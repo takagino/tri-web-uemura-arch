@@ -1,0 +1,288 @@
+@charset "UTF-8";
+@font-face {
+  font-family: "NotoSans";
+  src: url("../fonts/NotoSansJP-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "NotoSans";
+  src: url("../fonts/NotoSansJP-Medium.woff2") format("woff2");
+  font-weight: bold;
+  font-display: swap;
+}
+html {
+  scroll-behavior: smooth;
+  font-size: 0.75rem;
+}
+@media (width >= 768px) {
+  html {
+    font-size: 0.875rem;
+  }
+}
+@media (width >= 1024px) {
+  html {
+    font-size: 1rem;
+  }
+}
+
+::-moz-selection {
+  background: #292929;
+  color: #fff;
+}
+
+::selection {
+  background: #292929;
+  color: #fff;
+}
+
+body {
+  color: #595959;
+  font-size: 1rem;
+  font-family: "NotoSans", "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
+  font-weight: 400;
+  line-height: 1.7;
+  letter-spacing: 0.15em;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: bottom;
+}
+
+.header__inner {
+  max-width: 1500px;
+  width: 88%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 2rem 0;
+}
+.header__title {
+  position: relative;
+  z-index: 9999;
+  width: 200px;
+}
+@media (width >= 768px) {
+  .header__title {
+    width: 280px;
+  }
+}
+
+/* --- ハンバーガーボタン --- */
+body:has(.hamburger[aria-expanded=true]) {
+  overflow: hidden;
+}
+
+.hamburger {
+  display: block;
+  position: relative;
+  z-index: 1000;
+  width: 64px;
+  height: 64px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  position: fixed;
+  top: 1.25rem;
+  right: 1.875rem;
+}
+.hamburger__line {
+  display: block;
+  position: absolute;
+  left: 12px;
+  width: 40px;
+  height: 1px;
+  background-color: #595959;
+  transition: 0.3s;
+}
+.hamburger__line:nth-child(1) {
+  top: 22px;
+}
+.hamburger__line:nth-child(2) {
+  top: 32px;
+}
+.hamburger__line:nth-child(3) {
+  top: 42px;
+}
+.hamburger:hover .hamburger__line:nth-child(odd) {
+  width: 24px;
+}
+.hamburger[aria-expanded=true] .hamburger__line:nth-child(1) {
+  width: 40px !important;
+  transform: translateY(10px) rotate(45deg);
+}
+.hamburger[aria-expanded=true] .hamburger__line:nth-child(2) {
+  opacity: 0;
+}
+.hamburger[aria-expanded=true] .hamburger__line:nth-child(3) {
+  width: 40px !important;
+  transform: translateY(-10px) rotate(-45deg);
+}
+
+/* --- オーバーレイメニュー --- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100dvh;
+  background-color: rgba(255, 255, 255, 0.98);
+  z-index: 900;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s;
+  overflow-y: auto;
+}
+body:has(.hamburger[aria-expanded=true]) .overlay {
+  opacity: 1;
+  visibility: visible;
+}
+.overlay__inner {
+  display: grid;
+  place-content: center end;
+  min-height: 100%;
+  padding: 6.25rem 8%;
+}
+.overlay__list {
+  text-align: right;
+}
+.overlay__list:has(a:hover) a:not(:hover) {
+  opacity: 0.2;
+  filter: blur(1px);
+}
+.overlay__item {
+  margin-bottom: 2rem;
+  transform: translateX(50px);
+  opacity: 0;
+  transition: 0.4s;
+}
+body:has(.hamburger[aria-expanded=true]) .overlay__item {
+  transform: translateX(0);
+  opacity: 1;
+}
+body:has(.hamburger[aria-expanded=true]) .overlay__item:nth-child(1) {
+  transition-delay: 0.1s;
+}
+body:has(.hamburger[aria-expanded=true]) .overlay__item:nth-child(2) {
+  transition-delay: 0.2s;
+}
+body:has(.hamburger[aria-expanded=true]) .overlay__item:nth-child(3) {
+  transition-delay: 0.3s;
+}
+body:has(.hamburger[aria-expanded=true]) .overlay__item:nth-child(4) {
+  transition-delay: 0.4s;
+}
+body:has(.hamburger[aria-expanded=true]) .overlay__item:nth-child(5) {
+  transition-delay: 0.5s;
+}
+body:has(.hamburger[aria-expanded=true]) .overlay__item:nth-child(6) {
+  transition-delay: 0.6s;
+}
+.overlay__item a {
+  font-size: 1rem;
+  text-decoration: none;
+  color: #595959;
+  text-transform: uppercase;
+  transition: 0.3s;
+}
+
+.footer {
+  padding: 3rem 0;
+  border-top: 1px solid #eee;
+  font-size: 0.875rem;
+}
+.footer__inner {
+  max-width: 1500px;
+  width: 88%;
+  margin-left: auto;
+  margin-right: auto;
+  display: grid;
+  row-gap: 1rem;
+}
+@media (width >= 768px) {
+  .footer__inner {
+    grid-auto-flow: column;
+    justify-content: space-between;
+    align-items: end;
+  }
+}
+
+/* --- 上部へ戻るボタン --- */
+#back-to-top {
+  position: fixed;
+  bottom: 40px;
+  right: 0px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+  z-index: 1000;
+}
+#back-to-top img {
+  width: 80px;
+}
+
+#back-to-top.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* --- フェードインの基本設定 --- */
+[data-animate] {
+  opacity: 0;
+  transition-property: opacity, transform;
+  transition-duration: 1s;
+  transition-timing-function: ease-out;
+  will-change: opacity, transform;
+}
+
+[data-animate=fade-up] {
+  transform: translateY(30px);
+}
+
+[data-animate=fade-in] {
+  transform: none;
+}
+
+/* --- 監視対象が入ってきた時の状態 --- */
+[data-animate].is-animated {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+.philosophy {
+  padding-bottom: 7rem;
+}
+.philosophy__inner {
+  max-width: 46.875rem;
+  width: 88%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.philosophy__title {
+  margin-bottom: 5rem;
+  font-size: 1.75rem;
+  font-weight: bold;
+  text-align: center;
+}
+.philosophy__text {
+  display: grid;
+  row-gap: 1rem;
+}
+
+.works {
+  padding-bottom: 7rem;
+}
+.works__inner {
+  max-width: 1500px;
+  width: 88%;
+  margin-left: auto;
+  margin-right: auto;
+}
+/*# sourceMappingURL=style.css.map */
