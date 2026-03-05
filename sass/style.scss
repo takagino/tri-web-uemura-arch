@@ -1,5 +1,8 @@
 @use 'sass:math';
 
+/* =================================================================
+   Fonts
+================================================================= */
 @font-face {
   font-family: 'NotoSans';
   src: url('../fonts/NotoSansJP-Regular.woff2') format('woff2');
@@ -13,10 +16,9 @@
   font-display: swap;
 }
 
-// =================================================================
-//  Variables
-// =================================================================
-
+/* =================================================================
+   Variables
+================================================================= */
 // --- Spacing ---
 $space-xs: 0.25rem; // 4px
 $space-s: 1rem; // 16px
@@ -33,6 +35,10 @@ $color-main: #eee;
 $color-accent: #292929;
 $color-bg: #fafafa;
 
+$color-gray-dark: #333;
+$color-gray-mid: #888;
+$color-gray-light: #ccc;
+
 // --- Typography ---
 $font-size-base: 16;
 $font-family-gothic:
@@ -48,39 +54,26 @@ $breakpoints: (
   'desktop': 1024px,
 );
 
-// =================================================================
-//  Functions
-// =================================================================
-
-// pxをremに変換する
-// @param {number} $px-value - px値
-// @return {string} - rem値
+/* =================================================================
+   Functions
+================================================================= */
 @function rem($px-value) {
   @return #{math.div($px-value, $font-size-base)}rem;
 }
 
-// XDのトラッキング値をemに変換する
-// @param {number} $xd-value - XDのトラッキング値
-// @return {string} - em値
 @function ls($xd-value) {
   @return #{math.div($xd-value, 100)}em;
 }
 
-// =================================================================
-//  Mixins
-// =================================================================
-
-// メディアクエリ (モバイルファースト)
-// @param {string} $breakpoint - $breakpointsのキー
+/* =================================================================
+   Mixins
+================================================================= */
 @mixin mq($breakpoint: desktop) {
   @media (width >= map-get($breakpoints, $breakpoint)) {
     @content;
   }
 }
 
-// インナー幅の指定
-// @param {number} $mw - max-width
-// @param {number} $w  - width
 @mixin inner($mw: 1500px, $w: 88%) {
   max-width: $mw;
   width: $w;
@@ -95,9 +88,9 @@ $breakpoints: (
   text-align: center;
 }
 
-// =================================================================
-//  Common
-// =================================================================
+/* =================================================================
+   Base
+================================================================= */
 html {
   scroll-behavior: smooth;
   font-size: rem(14);
@@ -131,6 +124,10 @@ img {
   vertical-align: bottom;
 }
 
+/* =================================================================
+   Layout & Components (共通パーツ)
+================================================================= */
+/* --- Header --- */
 .header {
   position: fixed;
   top: 0;
@@ -153,14 +150,6 @@ img {
     }
   }
 
-  &.is-top {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 9999;
-  }
-
   &__logo--white {
     display: none;
   }
@@ -174,21 +163,22 @@ body.home:not(:has(.hamburger[aria-expanded='true'])) {
     .header__logo--white {
       display: block;
     }
-
     .hamburger__line {
-      background-color: #fff;
+      background-color: $color-base;
     }
   }
 }
 
-/* --- ハンバーガーボタン --- */
+/* --- Hamburger --- */
 body:has(.hamburger[aria-expanded='true']) {
   overflow: hidden;
 }
 
 .hamburger {
   display: block;
-  position: relative;
+  position: fixed;
+  top: rem(20);
+  right: rem(30);
   z-index: 1000;
   width: 64px;
   height: 64px;
@@ -196,9 +186,6 @@ body:has(.hamburger[aria-expanded='true']) {
   border: none;
   cursor: pointer;
   appearance: none;
-  position: fixed;
-  top: rem(20);
-  right: rem(30);
 
   &__line {
     display: block;
@@ -239,7 +226,7 @@ body:has(.hamburger[aria-expanded='true']) {
   }
 }
 
-/* --- オーバーレイメニュー --- */
+/* --- Overlay Menu --- */
 .overlay {
   position: fixed;
   inset: 0;
@@ -274,7 +261,7 @@ body:has(.hamburger[aria-expanded='true']) {
   }
 
   &__item {
-    margin-bottom: 2rem;
+    margin-bottom: $space-m;
     transform: translateX(50px);
     opacity: 0;
     transition: 0.4s;
@@ -283,23 +270,10 @@ body:has(.hamburger[aria-expanded='true']) {
       transform: translateX(0);
       opacity: 1;
 
-      &:nth-child(1) {
-        transition-delay: 0.1s;
-      }
-      &:nth-child(2) {
-        transition-delay: 0.2s;
-      }
-      &:nth-child(3) {
-        transition-delay: 0.3s;
-      }
-      &:nth-child(4) {
-        transition-delay: 0.4s;
-      }
-      &:nth-child(5) {
-        transition-delay: 0.5s;
-      }
-      &:nth-child(6) {
-        transition-delay: 0.6s;
+      @for $i from 1 through 6 {
+        &:nth-child(#{$i}) {
+          transition-delay: #{$i * 0.1}s;
+        }
       }
     }
 
@@ -313,6 +287,7 @@ body:has(.hamburger[aria-expanded='true']) {
   }
 }
 
+/* --- Footer --- */
 .footer {
   padding: $space-l 0;
   border-top: 1px solid $color-main;
@@ -335,12 +310,12 @@ body:has(.hamburger[aria-expanded='true']) {
   }
 }
 
-/* --- 上部へ戻るボタン --- */
+/* --- Back to Top --- */
 #back-to-top {
   position: fixed;
   bottom: 40px;
   right: 0px;
-  font-size: 16px;
+  font-size: rem(16);
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -349,42 +324,137 @@ body:has(.hamburger[aria-expanded='true']) {
   transition: opacity 0.5s ease;
   z-index: 1000;
 
+  &.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
   img {
     width: 80px;
   }
 }
 
-#back-to-top.show {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* --- フェードインの基本設定 --- */
+/* --- Animations --- */
 [data-animate] {
   opacity: 0;
   transition-property: opacity, transform;
   transition-duration: 1s;
   transition-timing-function: ease-out;
   will-change: opacity, transform;
+
+  &[data-animate='fade-up'] {
+    transform: translateY(30px);
+  }
+  &[data-animate='fade-in'] {
+    transform: none;
+  }
+  &.is-animated {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
 }
 
-[data-animate='fade-up'] {
-  transform: translateY(30px);
+/* --- Post Card (汎用コンポーネントとして独立) --- */
+.post {
+  a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  &__img {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    margin-bottom: $space-s;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      background-color: $color-bg;
+    }
+  }
+
+  &:hover {
+    .post__img img {
+      transform: scale(1.08);
+    }
+    .post__title {
+      opacity: 0.7;
+    }
+  }
 }
 
-[data-animate='fade-in'] {
-  transform: none;
+/* --- Pagination (汎用コンポーネントとして独立) --- */
+.pagination {
+  margin-top: $space-xl;
+  text-align: center;
+
+  ul.page-numbers {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-m;
+
+    li {
+      display: flex;
+      align-items: center;
+    }
+
+    a.page-numbers,
+    span.page-numbers {
+      font-size: rem(15);
+      color: #aaa;
+      padding: $space-xs;
+      position: relative;
+      transition:
+        color 0.4s ease,
+        transform 0.4s cubic-bezier(0.2, 1, 0.2, 1);
+      text-decoration: none;
+
+      &:hover {
+        color: $color-gray-dark;
+      }
+    }
+
+    span.current {
+      color: $color-gray-dark;
+      font-weight: bold;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: rem(12);
+        height: 1px;
+        background-color: $color-gray-dark;
+      }
+    }
+
+    .prev,
+    .next {
+      color: $color-gray-dark;
+      font-size: rem(18);
+
+      &:hover {
+        background: transparent;
+      }
+    }
+
+    .prev:hover {
+      transform: translateX(-4px);
+    }
+    .next:hover {
+      transform: translateX(4px);
+    }
+  }
 }
 
-/* --- 監視対象が入ってきた時の状態 --- */
-[data-animate].is-animated {
-  opacity: 1;
-  transform: translate(0, 0);
-}
-
-// =================================================================
-//  Front-page
-// =================================================================
+/* =================================================================
+   Pages - Front-page
+================================================================= */
 .hero {
   position: relative;
   height: 100vh;
@@ -399,7 +469,6 @@ body:has(.hamburger[aria-expanded='true']) {
     padding-left: 10%;
   }
 
-  // 背景画像のズームアウトフェード
   &__image {
     position: absolute;
     inset: 0;
@@ -419,18 +488,16 @@ body:has(.hamburger[aria-expanded='true']) {
     }
   }
 
-  // Swiperのアクティブ時
   .swiper-slide-active &__image img {
     transform: scale(1);
     opacity: 0.6;
   }
 
   &__content {
-    color: #fff;
+    color: $color-base;
     max-width: 600px;
   }
 
-  // テキストのマスクアニメーション
   [data-animate] {
     overflow: hidden;
     display: block;
@@ -443,19 +510,12 @@ body:has(.hamburger[aria-expanded='true']) {
     opacity: 1;
     transform: translateY(0);
 
-    // 順次表示（ディレイ）
-    &:nth-child(1) {
-      transition-delay: 0.5s;
-    } // works
-    &:nth-child(2) {
-      transition-delay: 0.7s;
-    } // title
-    &:nth-child(3) {
-      transition-delay: 0.8s;
-    } // tags
-    &:nth-child(4) {
-      transition-delay: 0.9s;
-    } // view more
+    @for $i from 1 through 4 {
+      &:nth-child(#{$i}) {
+        // works, title, tags, view more の順に表示
+        transition-delay: #{0.4 + ($i * 0.1)}s;
+      }
+    }
   }
 
   &__tips {
@@ -480,9 +540,9 @@ body:has(.hamburger[aria-expanded='true']) {
 
   &__link {
     display: inline-block;
-    color: #fff;
+    color: $color-base;
     text-decoration: none;
-    border-bottom: 1px solid #fff;
+    border-bottom: 1px solid $color-base;
     padding-bottom: rem(3);
     font-size: rem(14);
   }
@@ -495,7 +555,7 @@ body:has(.hamburger[aria-expanded='true']) {
     display: flex;
     align-items: center;
     gap: 20px;
-    color: #fff;
+    color: $color-base;
   }
 
   &__bar {
@@ -510,14 +570,14 @@ body:has(.hamburger[aria-expanded='true']) {
       left: 0;
       height: 100%;
       width: 0;
-      background: #fff;
+      background: $color-base;
     }
   }
 
   &__next {
     background: none;
     border: none;
-    color: #fff;
+    color: $color-base;
     cursor: pointer;
     padding: 0;
     font-family: inherit;
@@ -532,7 +592,7 @@ body:has(.hamburger[aria-expanded='true']) {
     right: 8%;
     bottom: 0;
     z-index: 20;
-    color: #fff;
+    color: $color-base;
 
     &-link {
       display: flex;
@@ -541,7 +601,6 @@ body:has(.hamburger[aria-expanded='true']) {
       text-decoration: none;
       color: inherit;
       transition: opacity 0.3s;
-
       &:hover {
         opacity: 0.7;
       }
@@ -568,7 +627,7 @@ body:has(.hamburger[aria-expanded='true']) {
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: #fff;
+        background-color: $color-base;
         animation: scroll-line 2.5s cubic-bezier(0.65, 0, 0.35, 1) infinite;
       }
     }
@@ -604,11 +663,9 @@ body:has(.hamburger[aria-expanded='true']) {
   &__inner {
     @include inner(rem(750));
   }
-
   &__title {
     @include title-main();
   }
-
   &__text {
     display: grid;
     row-gap: $space-s;
@@ -653,13 +710,13 @@ body:has(.hamburger[aria-expanded='true']) {
 
     &-label {
       font-size: rem(14);
-      color: #888;
+      color: $color-gray-mid;
 
       &::after {
         content: '/';
         display: inline-block;
         margin-left: $space-xs;
-        color: #ccc;
+        color: $color-gray-light;
       }
     }
 
@@ -674,6 +731,12 @@ body:has(.hamburger[aria-expanded='true']) {
       font-size: rem(15);
       transition: opacity 0.3s;
       position: relative;
+      appearance: none;
+      background: transparent;
+      border: none;
+      padding: 0;
+      color: inherit;
+      font-family: inherit;
 
       &.works__tag-current::after {
         content: '';
@@ -682,7 +745,7 @@ body:has(.hamburger[aria-expanded='true']) {
         left: 0;
         width: 100%;
         height: 1px;
-        background-color: #333;
+        background-color: $color-gray-dark;
       }
     }
   }
@@ -692,121 +755,11 @@ body:has(.hamburger[aria-expanded='true']) {
     gap: $space-l $space-m;
     grid-template-columns: repeat(auto-fill, minmax(rem(300), 1fr));
   }
-
-  &__pagination {
-    margin-top: $space-xl;
-    text-align: center;
-
-    ul.page-numbers {
-      display: inline-flex;
-      align-items: center;
-      gap: $space-m;
-
-      li {
-        display: flex;
-        align-items: center;
-      }
-
-      a.page-numbers,
-      span.page-numbers {
-        font-size: rem(15);
-        color: #aaa;
-        padding: $space-xs;
-        position: relative;
-        transition:
-          color 0.4s ease,
-          transform 0.4s cubic-bezier(0.2, 1, 0.2, 1);
-
-        &:hover {
-          color: #333;
-        }
-      }
-
-      span.current {
-        color: #333;
-        font-weight: bold;
-
-        &::after {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          left: 50%;
-          transform: translateX(-50%);
-          width: rem(12);
-          height: 1px;
-          background-color: #333;
-        }
-      }
-
-      .prev,
-      .next {
-        color: #333;
-        font-size: rem(18);
-
-        &:hover {
-          background: transparent;
-        }
-      }
-
-      .prev:hover {
-        transform: translateX(-4px);
-      }
-
-      .next:hover {
-        transform: translateX(4px);
-      }
-    }
-  }
 }
 
-.post {
-  a {
-    display: block;
-  }
-
-  &__img {
-    aspect-ratio: 4 / 5;
-    overflow: hidden;
-    margin-bottom: $space-s;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      background-color: $color-bg;
-    }
-  }
-
-  &:hover {
-    .post__img img {
-      transform: scale(1.08);
-    }
-    .post__title {
-      opacity: 0.7;
-    }
-  }
-}
-
-// =================================================================
-//  Company
-// =================================================================
-
-// =================================================================
-//  Members
-// =================================================================
-
-// =================================================================
-//  Process
-// =================================================================
-
-// =================================================================
-//  Contact
-// =================================================================
-
-// =================================================================
-//  Single
-// =================================================================
+/* =================================================================
+   Pages - Single
+================================================================= */
 .single-project {
   padding: $space-xxxl 0 $space-xxl;
   overflow-x: hidden;
@@ -827,7 +780,6 @@ body:has(.hamburger[aria-expanded='true']) {
 
   &__left {
     width: 100%;
-
     @include mq('desktop') {
       width: 30%;
       flex-shrink: 0;
@@ -836,7 +788,6 @@ body:has(.hamburger[aria-expanded='true']) {
 
   &__header {
     margin-bottom: $space-m;
-
     @include mq('desktop') {
       margin-bottom: $space-xl;
     }
@@ -846,7 +797,6 @@ body:has(.hamburger[aria-expanded='true']) {
     font-size: rem(24);
     font-weight: bold;
     margin: 0 0 $space-xs;
-
     @include mq('desktop') {
       margin: $space-xl 0 $space-xs;
     }
@@ -854,22 +804,18 @@ body:has(.hamburger[aria-expanded='true']) {
 
   &__category {
     font-size: rem(14);
-    color: #888;
-
+    color: $color-gray-mid;
     span:not(:last-child)::after {
       content: ', ';
     }
   }
 
-  &__content {
-    p {
-      margin-bottom: $space-s;
-    }
+  &__content p {
+    margin-bottom: $space-s;
   }
 
   &__right {
     width: 100%;
-
     @include mq('desktop') {
       width: 62%;
     }
@@ -877,7 +823,6 @@ body:has(.hamburger[aria-expanded='true']) {
 
   &__thumbnail {
     margin: 0 calc(50% - 50vw);
-
     @include mq('desktop') {
       margin: 0 calc(50% - 50vw) 0 0;
     }
@@ -912,49 +857,43 @@ body:has(.hamburger[aria-expanded='true']) {
 
     &__item {
       display: flex;
-
       dt {
         width: 100px;
-        color: #333;
-
+        color: $color-gray-dark;
         &::after {
           content: ' :';
         }
       }
-
       dd {
-        color: #333;
+        color: $color-gray-dark;
       }
     }
   }
 
   &__gallery-wrapper {
     margin-top: $space-xl;
-
     @include mq('desktop') {
       margin-top: $space-xxxl;
     }
   }
 
   &__gallery {
+    column-gap: $space-xs;
+
     @include mq('tablet') {
       column-count: 2;
-      column-gap: $space-m;
     }
-
     @include mq('desktop') {
       column-count: 3;
-      column-gap: $space-m;
     }
 
     &-item {
-      margin-bottom: $space-m;
+      margin-bottom: $space-xs;
       transition: opacity 0.3s;
 
       @include mq('tablet') {
         break-inside: avoid;
       }
-
       &:hover {
         opacity: 0.8;
       }
@@ -972,45 +911,40 @@ body:has(.hamburger[aria-expanded='true']) {
 .related-works {
   margin-top: $space-xxl;
   padding-top: $space-xxl;
-  background-color: #fafafa; // デザイン画の背景色に合わせて調整
+  background-color: $color-bg;
   padding-bottom: $space-xxxl;
 
   &__inner {
-    // 既存のinnerのスタイルを引き継ぎつつ、横スクロールを防止
     @include inner();
   }
 
-  /* ヘッダーエリア（線、view more、矢印） */
   &__header {
     display: flex;
     align-items: center;
     margin-bottom: $space-m;
   }
 
-  /* 左画面端から伸びる線 */
   &__line {
     height: 1px;
-    background-color: #333;
+    background-color: $color-gray-dark;
     width: 100px;
-    margin-left: calc(50% - 50vw); // 左端まで伸ばす魔法
-    flex-grow: 1; // 残りの空間を埋める
+    margin-left: calc(50% - 50vw);
+    flex-grow: 1;
     margin-right: 20px;
   }
 
   &__link {
     font-size: 13px;
-    color: #333;
+    color: $color-gray-dark;
     text-decoration: none;
     letter-spacing: 0.05em;
-    margin-right: auto; // 右側に余白を押しやる
+    margin-right: auto;
     transition: opacity 0.3s;
-
     &:hover {
       opacity: 0.6;
     }
   }
 
-  /* 左右の矢印ボタン */
   &__nav {
     display: flex;
     gap: 15px;
@@ -1018,7 +952,7 @@ body:has(.hamburger[aria-expanded='true']) {
     button {
       appearance: none;
       background: none;
-      border: 1px solid #ccc;
+      border: 1px solid $color-gray-light;
       border-radius: 50%;
       width: 40px;
       height: 40px;
@@ -1029,9 +963,9 @@ body:has(.hamburger[aria-expanded='true']) {
       justify-content: center;
 
       &:hover {
-        background: #333;
-        color: #fff;
-        border-color: #333;
+        background: $color-gray-dark;
+        color: $color-base;
+        border-color: $color-gray-dark;
       }
     }
   }

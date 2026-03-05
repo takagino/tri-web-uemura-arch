@@ -1,4 +1,7 @@
 @charset "UTF-8";
+/* =================================================================
+   Fonts
+================================================================= */
 @font-face {
   font-family: "NotoSans";
   src: url("../fonts/NotoSansJP-Regular.woff2") format("woff2");
@@ -11,6 +14,18 @@
   font-weight: bold;
   font-display: swap;
 }
+/* =================================================================
+   Variables
+================================================================= */
+/* =================================================================
+   Functions
+================================================================= */
+/* =================================================================
+   Mixins
+================================================================= */
+/* =================================================================
+   Base
+================================================================= */
 html {
   scroll-behavior: smooth;
   font-size: 0.875rem;
@@ -51,6 +66,10 @@ img {
   vertical-align: bottom;
 }
 
+/* =================================================================
+   Layout & Components (共通パーツ)
+================================================================= */
+/* --- Header --- */
 .header {
   position: fixed;
   top: 0;
@@ -75,13 +94,6 @@ img {
     width: 280px;
   }
 }
-.header.is-top {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 9999;
-}
 .header__logo--white {
   display: none;
 }
@@ -96,14 +108,16 @@ body.home:not(:has(.hamburger[aria-expanded=true])) .header:not(.is-scrolled) .h
   background-color: #fff;
 }
 
-/* --- ハンバーガーボタン --- */
+/* --- Hamburger --- */
 body:has(.hamburger[aria-expanded=true]) {
   overflow: hidden;
 }
 
 .hamburger {
   display: block;
-  position: relative;
+  position: fixed;
+  top: 1.25rem;
+  right: 1.875rem;
   z-index: 1000;
   width: 64px;
   height: 64px;
@@ -113,9 +127,6 @@ body:has(.hamburger[aria-expanded=true]) {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
-  position: fixed;
-  top: 1.25rem;
-  right: 1.875rem;
 }
 .hamburger__line {
   display: block;
@@ -150,7 +161,7 @@ body:has(.hamburger[aria-expanded=true]) {
   transform: translateY(-10px) rotate(-45deg);
 }
 
-/* --- オーバーレイメニュー --- */
+/* --- Overlay Menu --- */
 .overlay {
   position: fixed;
   inset: 0;
@@ -216,6 +227,7 @@ body:has(.hamburger[aria-expanded=true]) .overlay__item:nth-child(6) {
   transition: 0.3s;
 }
 
+/* --- Footer --- */
 .footer {
   padding: 3rem 0;
   border-top: 1px solid #eee;
@@ -240,12 +252,12 @@ body:has(.hamburger[aria-expanded=true]) .overlay__item:nth-child(6) {
   font-size: 0.75rem;
 }
 
-/* --- 上部へ戻るボタン --- */
+/* --- Back to Top --- */
 #back-to-top {
   position: fixed;
   bottom: 40px;
   right: 0px;
-  font-size: 16px;
+  font-size: 1rem;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -254,16 +266,15 @@ body:has(.hamburger[aria-expanded=true]) .overlay__item:nth-child(6) {
   transition: opacity 0.5s ease;
   z-index: 1000;
 }
-#back-to-top img {
-  width: 80px;
-}
-
 #back-to-top.show {
   opacity: 1;
   pointer-events: auto;
 }
+#back-to-top img {
+  width: 80px;
+}
 
-/* --- フェードインの基本設定 --- */
+/* --- Animations --- */
 [data-animate] {
   opacity: 0;
   transition-property: opacity, transform;
@@ -271,21 +282,103 @@ body:has(.hamburger[aria-expanded=true]) .overlay__item:nth-child(6) {
   transition-timing-function: ease-out;
   will-change: opacity, transform;
 }
-
-[data-animate=fade-up] {
+[data-animate][data-animate=fade-up] {
   transform: translateY(30px);
 }
-
-[data-animate=fade-in] {
+[data-animate][data-animate=fade-in] {
   transform: none;
 }
-
-/* --- 監視対象が入ってきた時の状態 --- */
 [data-animate].is-animated {
   opacity: 1;
   transform: translate(0, 0);
 }
 
+/* --- Post Card (汎用コンポーネントとして独立) --- */
+.post a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+.post__img {
+  aspect-ratio: 4/5;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.post__img img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  background-color: #fafafa;
+}
+.post:hover .post__img img {
+  transform: scale(1.08);
+}
+.post:hover .post__title {
+  opacity: 0.7;
+}
+
+/* --- Pagination (汎用コンポーネントとして独立) --- */
+.pagination {
+  margin-top: 5rem;
+  text-align: center;
+}
+.pagination ul.page-numbers {
+  display: inline-flex;
+  align-items: center;
+  gap: 2rem;
+}
+.pagination ul.page-numbers li {
+  display: flex;
+  align-items: center;
+}
+.pagination ul.page-numbers a.page-numbers,
+.pagination ul.page-numbers span.page-numbers {
+  font-size: 0.9375rem;
+  color: #aaa;
+  padding: 0.25rem;
+  position: relative;
+  transition: color 0.4s ease, transform 0.4s cubic-bezier(0.2, 1, 0.2, 1);
+  text-decoration: none;
+}
+.pagination ul.page-numbers a.page-numbers:hover,
+.pagination ul.page-numbers span.page-numbers:hover {
+  color: #333;
+}
+.pagination ul.page-numbers span.current {
+  color: #333;
+  font-weight: bold;
+}
+.pagination ul.page-numbers span.current::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0.75rem;
+  height: 1px;
+  background-color: #333;
+}
+.pagination ul.page-numbers .prev,
+.pagination ul.page-numbers .next {
+  color: #333;
+  font-size: 1.125rem;
+}
+.pagination ul.page-numbers .prev:hover,
+.pagination ul.page-numbers .next:hover {
+  background: transparent;
+}
+.pagination ul.page-numbers .prev:hover {
+  transform: translateX(-4px);
+}
+.pagination ul.page-numbers .next:hover {
+  transform: translateX(4px);
+}
+
+/* =================================================================
+   Pages - Front-page
+================================================================= */
 .hero {
   position: relative;
   height: 100vh;
@@ -338,13 +431,13 @@ body:has(.hamburger[aria-expanded=true]) .overlay__item:nth-child(6) {
   transition-delay: 0.5s;
 }
 .hero .swiper-slide-active [data-animate]:nth-child(2) {
-  transition-delay: 0.7s;
+  transition-delay: 0.6s;
 }
 .hero .swiper-slide-active [data-animate]:nth-child(3) {
-  transition-delay: 0.8s;
+  transition-delay: 0.7s;
 }
 .hero .swiper-slide-active [data-animate]:nth-child(4) {
-  transition-delay: 0.9s;
+  transition-delay: 0.8s;
 }
 .hero__tips {
   margin-bottom: 1rem;
@@ -564,6 +657,14 @@ body:has(.hamburger[aria-expanded=true]) .overlay__item:nth-child(6) {
   font-size: 0.9375rem;
   transition: opacity 0.3s;
   position: relative;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font-family: inherit;
 }
 .works__tag-link.works__tag-current::after {
   content: "";
@@ -579,84 +680,10 @@ body:has(.hamburger[aria-expanded=true]) .overlay__item:nth-child(6) {
   gap: 3rem 2rem;
   grid-template-columns: repeat(auto-fill, minmax(18.75rem, 1fr));
 }
-.works__pagination {
-  margin-top: 5rem;
-  text-align: center;
-}
-.works__pagination ul.page-numbers {
-  display: inline-flex;
-  align-items: center;
-  gap: 2rem;
-}
-.works__pagination ul.page-numbers li {
-  display: flex;
-  align-items: center;
-}
-.works__pagination ul.page-numbers a.page-numbers,
-.works__pagination ul.page-numbers span.page-numbers {
-  font-size: 0.9375rem;
-  color: #aaa;
-  padding: 0.25rem;
-  position: relative;
-  transition: color 0.4s ease, transform 0.4s cubic-bezier(0.2, 1, 0.2, 1);
-}
-.works__pagination ul.page-numbers a.page-numbers:hover,
-.works__pagination ul.page-numbers span.page-numbers:hover {
-  color: #333;
-}
-.works__pagination ul.page-numbers span.current {
-  color: #333;
-  font-weight: bold;
-}
-.works__pagination ul.page-numbers span.current::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0.75rem;
-  height: 1px;
-  background-color: #333;
-}
-.works__pagination ul.page-numbers .prev,
-.works__pagination ul.page-numbers .next {
-  color: #333;
-  font-size: 1.125rem;
-}
-.works__pagination ul.page-numbers .prev:hover,
-.works__pagination ul.page-numbers .next:hover {
-  background: transparent;
-}
-.works__pagination ul.page-numbers .prev:hover {
-  transform: translateX(-4px);
-}
-.works__pagination ul.page-numbers .next:hover {
-  transform: translateX(4px);
-}
 
-.post a {
-  display: block;
-}
-.post__img {
-  aspect-ratio: 4/5;
-  overflow: hidden;
-  margin-bottom: 1rem;
-}
-.post__img img {
-  width: 100%;
-  height: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
-  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  background-color: #fafafa;
-}
-.post:hover .post__img img {
-  transform: scale(1.08);
-}
-.post:hover .post__title {
-  opacity: 0.7;
-}
-
+/* =================================================================
+   Pages - Single
+================================================================= */
 .single-project {
   padding: 9rem 0 7rem;
   overflow-x: hidden;
@@ -779,24 +806,24 @@ body:has(.hamburger[aria-expanded=true]) .overlay__item:nth-child(6) {
     margin-top: 9rem;
   }
 }
+.single-project__gallery {
+  -moz-column-gap: 0.25rem;
+       column-gap: 0.25rem;
+}
 @media (width >= 768px) {
   .single-project__gallery {
     -moz-column-count: 2;
          column-count: 2;
-    -moz-column-gap: 2rem;
-         column-gap: 2rem;
   }
 }
 @media (width >= 1024px) {
   .single-project__gallery {
     -moz-column-count: 3;
          column-count: 3;
-    -moz-column-gap: 2rem;
-         column-gap: 2rem;
   }
 }
 .single-project__gallery-item {
-  margin-bottom: 2rem;
+  margin-bottom: 0.25rem;
   transition: opacity 0.3s;
 }
 @media (width >= 768px) {
@@ -820,9 +847,6 @@ body:has(.hamburger[aria-expanded=true]) .overlay__item:nth-child(6) {
   padding-top: 7rem;
   background-color: #fafafa;
   padding-bottom: 9rem;
-  /* ヘッダーエリア（線、view more、矢印） */
-  /* 左画面端から伸びる線 */
-  /* 左右の矢印ボタン */
 }
 .related-works__inner {
   max-width: 1500px;

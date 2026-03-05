@@ -215,7 +215,7 @@ function arc_get_works_html($cat_id = 0, $paged = 1)
     endwhile;
     echo '</div>';
 
-    echo '<div class="works__pagination">';
+    echo '<div class="pagination">';
     echo paginate_links([
       'total'     => $works_query->max_num_pages,
       'current'   => $paged,
