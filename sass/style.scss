@@ -329,6 +329,10 @@ body:has(.hamburger[aria-expanded='true']) {
       align-items: end;
     }
   }
+
+  &__copy {
+    font-size: rem(12);
+  }
 }
 
 /* --- 上部へ戻るボタン --- */
@@ -411,6 +415,7 @@ body:has(.hamburger[aria-expanded='true']) {
       transition:
         transform 8s ease-out,
         opacity 1.5s ease-in;
+      background-color: $color-bg;
     }
   }
 
@@ -769,6 +774,7 @@ body:has(.hamburger[aria-expanded='true']) {
       height: 100%;
       object-fit: cover;
       transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      background-color: $color-bg;
     }
   }
 
@@ -797,3 +803,242 @@ body:has(.hamburger[aria-expanded='true']) {
 // =================================================================
 //  Contact
 // =================================================================
+
+// =================================================================
+//  Single
+// =================================================================
+.single-project {
+  padding: $space-xxxl 0 $space-xxl;
+  overflow-x: hidden;
+
+  &__inner {
+    @include inner();
+    display: flex;
+    flex-direction: column;
+    gap: $space-l;
+
+    @include mq('desktop') {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0;
+    }
+  }
+
+  &__left {
+    width: 100%;
+
+    @include mq('desktop') {
+      width: 30%;
+      flex-shrink: 0;
+    }
+  }
+
+  &__header {
+    margin-bottom: $space-m;
+
+    @include mq('desktop') {
+      margin-bottom: $space-xl;
+    }
+  }
+
+  &__title {
+    font-size: rem(24);
+    font-weight: bold;
+    margin: 0 0 $space-xs;
+
+    @include mq('desktop') {
+      margin: $space-xl 0 $space-xs;
+    }
+  }
+
+  &__category {
+    font-size: rem(14);
+    color: #888;
+
+    span:not(:last-child)::after {
+      content: ', ';
+    }
+  }
+
+  &__content {
+    p {
+      margin-bottom: $space-s;
+    }
+  }
+
+  &__right {
+    width: 100%;
+
+    @include mq('desktop') {
+      width: 62%;
+    }
+  }
+
+  &__thumbnail {
+    margin: 0 calc(50% - 50vw);
+
+    @include mq('desktop') {
+      margin: 0 calc(50% - 50vw) 0 0;
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      display: block;
+      background-color: $color-bg;
+    }
+  }
+
+  &__meta {
+    margin-top: $space-m;
+    display: flex;
+    justify-content: flex-start;
+    padding-right: 0;
+
+    @include mq('desktop') {
+      justify-content: flex-end;
+      padding-right: 10%;
+    }
+  }
+
+  .meta-list {
+    display: flex;
+    flex-direction: column;
+    gap: $space-s;
+    font-size: rem(13);
+
+    &__item {
+      display: flex;
+
+      dt {
+        width: 100px;
+        color: #333;
+
+        &::after {
+          content: ' :';
+        }
+      }
+
+      dd {
+        color: #333;
+      }
+    }
+  }
+
+  &__gallery-wrapper {
+    margin-top: $space-xl;
+
+    @include mq('desktop') {
+      margin-top: $space-xxxl;
+    }
+  }
+
+  &__gallery {
+    @include mq('tablet') {
+      column-count: 2;
+      column-gap: $space-m;
+    }
+
+    @include mq('desktop') {
+      column-count: 3;
+      column-gap: $space-m;
+    }
+
+    &-item {
+      margin-bottom: $space-m;
+      transition: opacity 0.3s;
+
+      @include mq('tablet') {
+        break-inside: avoid;
+      }
+
+      &:hover {
+        opacity: 0.8;
+      }
+
+      img {
+        width: 100%;
+        height: auto;
+        display: block;
+        background-color: $color-bg;
+      }
+    }
+  }
+}
+
+.related-works {
+  margin-top: $space-xxl;
+  padding-top: $space-xxl;
+  background-color: #fafafa; // デザイン画の背景色に合わせて調整
+  padding-bottom: $space-xxxl;
+
+  &__inner {
+    // 既存のinnerのスタイルを引き継ぎつつ、横スクロールを防止
+    @include inner();
+  }
+
+  /* ヘッダーエリア（線、view more、矢印） */
+  &__header {
+    display: flex;
+    align-items: center;
+    margin-bottom: $space-m;
+  }
+
+  /* 左画面端から伸びる線 */
+  &__line {
+    height: 1px;
+    background-color: #333;
+    width: 100px;
+    margin-left: calc(50% - 50vw); // 左端まで伸ばす魔法
+    flex-grow: 1; // 残りの空間を埋める
+    margin-right: 20px;
+  }
+
+  &__link {
+    font-size: 13px;
+    color: #333;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    margin-right: auto; // 右側に余白を押しやる
+    transition: opacity 0.3s;
+
+    &:hover {
+      opacity: 0.6;
+    }
+  }
+
+  /* 左右の矢印ボタン */
+  &__nav {
+    display: flex;
+    gap: 15px;
+
+    button {
+      appearance: none;
+      background: none;
+      border: 1px solid #ccc;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        background: #333;
+        color: #fff;
+        border-color: #333;
+      }
+    }
+  }
+
+  .js-related-slider {
+    margin-right: calc(50% - 50vw);
+    padding-right: calc(50vw - 50%);
+    overflow: hidden;
+  }
+}

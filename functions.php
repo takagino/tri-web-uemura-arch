@@ -5,11 +5,10 @@
 ----------------------------------------------*/
 function arc_theme_setup()
 {
-  // 基本サポート
   add_theme_support('title-tag');
   add_theme_support('post-thumbnails');
   add_theme_support('automatic-feed-links');
-  add_theme_support('html5', array(
+  add_theme_support('html5', [
     'search-form',
     'comment-form',
     'comment-list',
@@ -18,16 +17,13 @@ function arc_theme_setup()
     'style',
     'script',
     'navigation-widgets',
-  ));
+  ]);
 
-  // メニューの登録
-  add_theme_support('menus');
-  register_nav_menus(array(
+  register_nav_menus([
     'header' => 'Header Menu',
     'footer' => 'Footer Menu',
-  ));
+  ]);
 
-  // 不要なメタタグの削除（セキュリティ・パフォーマンス向上）
   remove_action('wp_head', 'wp_generator');
   remove_action('wp_head', 'rsd_link');
   remove_action('wp_head', 'wlwmanifest_link');
@@ -35,7 +31,6 @@ function arc_theme_setup()
 }
 add_action('after_setup_theme', 'arc_theme_setup');
 
-// 絵文字機能・その他不要機能の削除
 function arc_remove_extra_features()
 {
   remove_action('wp_head', 'print_emoji_detection_script', 7);
@@ -46,7 +41,6 @@ function arc_remove_extra_features()
   remove_filter('comment_text_rss', 'wp_staticize_emoji');
   remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
 
-  // oEmbed関連の不要なタグを削除
   remove_action('wp_head', 'rest_output_link_wp_head');
   remove_action('wp_head', 'wp_oembed_add_discovery_links');
   remove_action('wp_head', 'wp_oembed_add_host_js');
@@ -60,32 +54,24 @@ add_action('init', 'arc_remove_extra_features');
 ----------------------------------------------*/
 function arc_enqueue_scripts()
 {
-  // キャッシュバスティング（更新時の自動キャッシュクリア）を適用
-  $css_path = filemtime(get_theme_file_path('/assets/css/style.css'));
-  $js_path = filemtime(get_theme_file_path('/js/script.js'));
+  // パス取得の重複処理を解消
+  $css_file = get_theme_file_path('/assets/css/style.css');
+  $js_file  = get_theme_file_path('/js/script.js');
 
-  // ファイルが存在する場合のみ更新日時を取得（Warning防止）
-  $css_version = file_exists(get_theme_file_path($css_path))
-    ? filemtime(get_theme_file_path($css_path))
-    : '1.0.0';
+  $css_version = file_exists($css_file) ? filemtime($css_file) : '1.0.0';
+  $js_version  = file_exists($js_file) ? filemtime($js_file) : '1.0.0';
 
-  $js_version = file_exists(get_theme_file_path($js_path))
-    ? filemtime(get_theme_file_path($js_path))
-    : '1.0.0';
-
-  // CSS
   wp_enqueue_style('reset', 'https://cdn.jsdelivr.net/npm/the-new-css-reset/css/reset.min.css');
   wp_enqueue_style('icon-font', 'https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css');
   wp_enqueue_style('swiper', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css');
-  wp_enqueue_style('arc-style', get_theme_file_uri('/assets/css/style.css'), array('swiper'), $css_version);
+  wp_enqueue_style('arc-style', get_theme_file_uri('/assets/css/style.css'), ['swiper'], $css_version);
 
   wp_dequeue_style('wp-block-library');
   wp_dequeue_style('wp-block-library-theme');
 
-  // JS
-  wp_enqueue_script('swiper', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js', array(), null, true);
-  wp_enqueue_script('arc-script', get_theme_file_uri('/js/script.js'), array('jquery', 'swiper'), $js_version, true);
-  wp_localize_script('arc-script', 'arc_ajax', array('url' => admin_url('admin-ajax.php')));
+  wp_enqueue_script('swiper', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js', [], null, true);
+  wp_enqueue_script('arc-script', get_theme_file_uri('/js/script.js'), ['jquery', 'swiper'], $js_version, true);
+  wp_localize_script('arc-script', 'arc_ajax', ['url' => admin_url('admin-ajax.php')]);
 }
 add_action('wp_enqueue_scripts', 'arc_enqueue_scripts');
 
@@ -93,28 +79,21 @@ add_action('wp_enqueue_scripts', 'arc_enqueue_scripts');
 /*--------------------------------------------
 3. タイトル周りの最適化
 ----------------------------------------------*/
-// セパレーターの変更
-add_filter('document_title_separator', function ($sep) {
-  return '|';
-});
+// アロー関数（PHP 7.4+）でスッキリ記述
+add_filter('document_title_separator', fn() => '|');
 
-// キャッチフレーズの除去
 add_filter('document_title_parts', function ($title) {
-  if (isset($title['tagline'])) {
-    unset($title['tagline']);
-  }
+  unset($title['tagline']);
   return $title;
 });
 
 
 /*--------------------------------------------
-4. 管理画面・投稿タイプのカスタマイズ（クライアント向け配慮）
+4. 管理画面・投稿タイプのカスタマイズ
 ----------------------------------------------*/
-// 「投稿」を「実績紹介」に変更
 function arc_change_post_menu_label()
 {
-  global $menu;
-  global $submenu;
+  global $menu, $submenu;
   $menu[5][0] = '実績紹介';
   $submenu['edit.php'][5][0]  = '実績紹介一覧';
   $submenu['edit.php'][10][0] = '新規追加';
@@ -138,10 +117,9 @@ function arc_change_post_object_label()
 }
 add_action('init', 'arc_change_post_object_label');
 
-// 管理者以外はメニュー非表示
 add_action('admin_menu', function () {
-  if (! current_user_can('administrator')) {
-    remove_menu_page('upload.php'); // メディア（必要に応じて残す）
+  if (!current_user_can('administrator')) {
+    remove_menu_page('upload.php');
     remove_menu_page('edit-comments.php');
     remove_menu_page('themes.php');
     remove_menu_page('plugins.php');
@@ -152,18 +130,16 @@ add_action('admin_menu', function () {
   }
 }, 999);
 
-// 管理者以外は管理バー項目を非表示
 add_action('admin_bar_menu', function ($wp_admin_bar) {
-  if (! current_user_can('administrator')) {
+  if (!current_user_can('administrator')) {
     $wp_admin_bar->remove_menu('wp-logo');
     $wp_admin_bar->remove_menu('comments');
     $wp_admin_bar->remove_menu('updates');
   }
 }, 999);
 
-// ダッシュボードウィジェットの整理
 add_action('wp_dashboard_setup', function () {
-  if (! current_user_can('administrator')) {
+  if (!current_user_can('administrator')) {
     remove_meta_box('dashboard_site_health', 'dashboard', 'normal');
     remove_meta_box('dashboard_right_now', 'dashboard', 'normal');
     remove_meta_box('dashboard_activity', 'dashboard', 'normal');
@@ -173,19 +149,17 @@ add_action('wp_dashboard_setup', function () {
   }
 });
 
-// 一覧画面の不要なカラムを削除
 function arc_delete_columns($columns)
 {
-  unset($columns['author']);
-  unset($columns['comments']);
+  // unsetはカンマ区切りで複数同時に処理可能
+  unset($columns['author'], $columns['comments']);
   return $columns;
 }
 add_filter('manage_posts_columns', 'arc_delete_columns');
 add_filter('manage_pages_columns', 'arc_delete_columns');
 
-// 管理者以外はビジュアルエディタのタグを制限
 add_filter('wp_editor_settings', function ($settings) {
-  if (! current_user_can('administrator') && user_can_richedit()) {
+  if (!current_user_can('administrator') && user_can_richedit()) {
     $settings['quicktags'] = false;
   }
   return $settings;
@@ -195,27 +169,26 @@ add_filter('wp_editor_settings', function ($settings) {
 /*--------------------------------------------
 5. ACF設定 & 外部API
 ----------------------------------------------*/
-// ACFオプションページの追加
 if (function_exists('acf_add_options_page')) {
-  acf_add_options_page(array(
+  acf_add_options_page([
     'page_title' => 'サイトの基本情報設定',
     'menu_title' => '基本情報',
     'menu_slug'  => 'basic-information',
     'capability' => 'edit_posts',
     'redirect'   => false,
     'position'   => 30,
-    'icon_url'   => 'dashicons-admin-home', // 建築サイト向けのアイコン
-  ));
+    'icon_url'   => 'dashicons-admin-home',
+  ]);
 }
 
 function arc_get_works_html($cat_id = 0, $paged = 1)
 {
-  $args = array(
+  $args = [
     'post_type'      => 'post',
     'posts_per_page' => 3,
     'paged'          => $paged,
-  );
-  // カテゴリーが「全て(0)」以外の場合のみ絞り込み条件を追加
+  ];
+
   if ($cat_id > 0) {
     $args['cat'] = $cat_id;
   }
@@ -242,15 +215,14 @@ function arc_get_works_html($cat_id = 0, $paged = 1)
     endwhile;
     echo '</div>';
 
-    // ページネーション出力
     echo '<div class="works__pagination">';
-    echo paginate_links(array(
+    echo paginate_links([
       'total'     => $works_query->max_num_pages,
       'current'   => $paged,
       'prev_text' => '<i class="la la-angle-left"></i>',
       'next_text' => '<i class="la la-angle-right"></i>',
       'type'      => 'list',
-    ));
+    ]);
     echo '</div>';
   else :
     echo '<p>現在、表示できる実績はありません。</p>';
@@ -259,51 +231,50 @@ function arc_get_works_html($cat_id = 0, $paged = 1)
   wp_reset_postdata();
 }
 
-// JSからのAJAXリクエストを受け取る処理
 function arc_ajax_load_works()
 {
   $cat_id = isset($_POST['cat_id']) ? intval($_POST['cat_id']) : 0;
   $paged  = isset($_POST['paged']) ? intval($_POST['paged']) : 1;
 
-  ob_start(); // 出力のバッファリング開始
-  arc_get_works_html($cat_id, $paged); // HTMLを生成
-  $html = ob_get_clean(); // 生成したHTMLを変数に格納
+  ob_start();
+  arc_get_works_html($cat_id, $paged);
+  $html = ob_get_clean();
 
-  // JS側にJSON形式で成功レスポンスを返す
-  wp_send_json_success(array('html' => $html));
+  wp_send_json_success(['html' => $html]);
 }
-add_action('wp_ajax_arc_load_works', 'arc_ajax_load_works'); // ログインユーザー用
-add_action('wp_ajax_nopriv_arc_load_works', 'arc_ajax_load_works'); // 未ログインユーザー用
+add_action('wp_ajax_arc_load_works', 'arc_ajax_load_works');
+add_action('wp_ajax_nopriv_arc_load_works', 'arc_ajax_load_works');
 
-// Instagram API ルートの登録
+
 add_action('rest_api_init', function () {
-  register_rest_route('custom/v1', '/instagram', array(
+  register_rest_route('custom/v1', '/instagram', [
     'methods'             => 'GET',
     'callback'            => 'arc_get_instagram_feed',
     'permission_callback' => '__return_true',
-  ));
+  ]);
 });
 
 function arc_get_instagram_feed()
 {
   $postCount  = 8;
   $token      = defined('INSTAGRAM_ACCESS_TOKEN') ? INSTAGRAM_ACCESS_TOKEN : '';
-  $businessId = '';
+  $businessId = ''; // 実際にはここにIDが入る想定
 
   if (empty($token)) {
-    return new WP_REST_Response(array('error' => 'Token not defined'), 500);
+    return new WP_REST_Response(['error' => 'Token not defined'], 500);
   }
 
-  $query = array(
-    'fields'       => 'media.limit(' . $postCount . '){media_type,media_url,caption,permalink,thumbnail_url}',
+  $query = [
+    // 変数展開を利用して文字列連結をスッキリさせる
+    'fields'       => "media.limit({$postCount}){media_type,media_url,caption,permalink,thumbnail_url}",
     'access_token' => $token,
-  );
+  ];
 
-  $url = 'https://graph.facebook.com/v15.0/' . $businessId . '?' . http_build_query($query);
+  $url = "https://graph.facebook.com/v15.0/{$businessId}?" . http_build_query($query);
   $response = wp_remote_get($url);
 
   if (is_wp_error($response)) {
-    return new WP_REST_Response(array('error' => 'Failed to fetch data'), 500);
+    return new WP_REST_Response(['error' => 'Failed to fetch data'], 500);
   }
 
   return json_decode(wp_remote_retrieve_body($response));

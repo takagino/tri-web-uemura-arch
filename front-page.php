@@ -4,11 +4,11 @@
         <div class="swiper js-hero-slider">
             <div class="swiper-wrapper">
                 <?php
-                $args = array(
+                $args = [
                     'post_type'      => 'post',
                     'posts_per_page' => 5,
                     'category_name'  => 'pickup',
-                );
+                ];
                 $hero_query = new WP_Query($args);
 
                 if ($hero_query->have_posts()) :
@@ -16,24 +16,26 @@
                 ?>
                         <div class="swiper-slide hero__slide">
                             <div class="hero__image">
-                                <?php the_post_thumbnail('full'); ?>
+                                <?php if (has_post_thumbnail()) : ?>
+                                    <?php the_post_thumbnail('full'); ?>
+                                <?php else : ?>
+                                    <img src="<?php echo esc_url(get_theme_file_uri('/img/dummy.jpg')); ?>" alt="no-image">
+                                <?php endif; ?>
                             </div>
 
                             <div class="hero__content">
                                 <p class="hero__tips" data-animate>works</p>
-
                                 <h2 class="hero__title" data-animate><?php the_title(); ?></h2>
 
                                 <p class="hero__category" data-animate>
                                     <?php
                                     $categories = get_the_category();
-                                    if ($categories) :
-                                        foreach ($categories as $category) :
-                                            if ($category->slug !== 'pickup') :
-                                                echo '<span>' . esc_html($category->name) . '</span> ';
-                                            endif;
-                                        endforeach;
-                                    endif;
+                                    if ($categories) {
+                                        foreach ($categories as $category) {
+                                            if ($category->slug === 'pickup') continue;
+                                            echo '<span>' . esc_html($category->name) . '</span> ';
+                                        }
+                                    }
                                     ?>
                                 </p>
 
@@ -94,43 +96,36 @@
             <div class="works__title-group" data-animate="fade-up">
                 <h2 class="works__title">works</h2>
                 <div class="works__all">
-                    <button type="button" class="works__tag-link works__tag-current" data-cat-id="0">
-                        all
-                    </button>
+                    <button type="button" class="works__tag-link works__tag-current" data-cat-id="0">all</button>
                 </div>
             </div>
 
             <div class="works__tag" data-animate="fade-up">
                 <?php
-                $exclude_slugs = array('exclude', 'pickup');
+                $exclude_slugs = ['exclude', 'pickup'];
                 $exclude_ids   = array_reduce($exclude_slugs, function ($carry, $slug) {
                     $cat = get_category_by_slug($slug);
-                    if ($cat) {
-                        $carry[] = $cat->term_id;
-                    }
+                    if ($cat) $carry[] = $cat->term_id;
                     return $carry;
-                }, array());
+                }, []);
 
-                $parent_categories = get_categories(array(
+                $parent_categories = get_categories([
                     'parent'     => 0,
                     'hide_empty' => false,
                     'exclude'    => $exclude_ids,
-                ));
+                ]);
 
                 foreach ($parent_categories as $parent_cat) :
-                    $child_categories = get_categories(array(
+                    $child_categories = get_categories([
                         'parent'     => $parent_cat->term_id,
                         'hide_empty' => false,
                         'exclude'    => $exclude_ids,
-                    ));
+                    ]);
 
                     if (!empty($child_categories)) :
                 ?>
                         <div class="works__tag-group">
-                            <span class="works__tag-label">
-                                <?php echo esc_html($parent_cat->name); ?>
-                            </span>
-
+                            <span class="works__tag-label"><?php echo esc_html($parent_cat->name); ?></span>
                             <div class="works__tag-items">
                                 <?php foreach ($child_categories as $child_cat) : ?>
                                     <button type="button" class="works__tag-link" data-cat-id="<?php echo esc_attr($child_cat->term_id); ?>">

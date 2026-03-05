@@ -236,6 +236,9 @@ body:has(.hamburger[aria-expanded=true]) .overlay__item:nth-child(6) {
     align-items: end;
   }
 }
+.footer__copy {
+  font-size: 0.75rem;
+}
 
 /* --- 上部へ戻るボタン --- */
 #back-to-top {
@@ -310,6 +313,7 @@ body:has(.hamburger[aria-expanded=true]) .overlay__item:nth-child(6) {
   transform: scale(1.1);
   opacity: 0;
   transition: transform 8s ease-out, opacity 1.5s ease-in;
+  background-color: #fafafa;
 }
 .swiper-slide-active .hero__image img {
   transform: scale(1);
@@ -644,11 +648,239 @@ body:has(.hamburger[aria-expanded=true]) .overlay__item:nth-child(6) {
   -o-object-fit: cover;
      object-fit: cover;
   transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  background-color: #fafafa;
 }
 .post:hover .post__img img {
   transform: scale(1.08);
 }
 .post:hover .post__title {
   opacity: 0.7;
+}
+
+.single-project {
+  padding: 9rem 0 7rem;
+  overflow-x: hidden;
+}
+.single-project__inner {
+  max-width: 1500px;
+  width: 88%;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+@media (width >= 1024px) {
+  .single-project__inner {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0;
+  }
+}
+.single-project__left {
+  width: 100%;
+}
+@media (width >= 1024px) {
+  .single-project__left {
+    width: 30%;
+    flex-shrink: 0;
+  }
+}
+.single-project__header {
+  margin-bottom: 2rem;
+}
+@media (width >= 1024px) {
+  .single-project__header {
+    margin-bottom: 5rem;
+  }
+}
+.single-project__title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0 0 0.25rem;
+}
+@media (width >= 1024px) {
+  .single-project__title {
+    margin: 5rem 0 0.25rem;
+  }
+}
+.single-project__category {
+  font-size: 0.875rem;
+  color: #888;
+}
+.single-project__category span:not(:last-child)::after {
+  content: ", ";
+}
+.single-project__content p {
+  margin-bottom: 1rem;
+}
+.single-project__right {
+  width: 100%;
+}
+@media (width >= 1024px) {
+  .single-project__right {
+    width: 62%;
+  }
+}
+.single-project__thumbnail {
+  margin: 0 calc(50% - 50vw);
+}
+@media (width >= 1024px) {
+  .single-project__thumbnail {
+    margin: 0 calc(50% - 50vw) 0 0;
+  }
+}
+.single-project__thumbnail img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/10;
+  -o-object-fit: cover;
+     object-fit: cover;
+  display: block;
+  background-color: #fafafa;
+}
+.single-project__meta {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: flex-start;
+  padding-right: 0;
+}
+@media (width >= 1024px) {
+  .single-project__meta {
+    justify-content: flex-end;
+    padding-right: 10%;
+  }
+}
+.single-project .meta-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-size: 0.8125rem;
+}
+.single-project .meta-list__item {
+  display: flex;
+}
+.single-project .meta-list__item dt {
+  width: 100px;
+  color: #333;
+}
+.single-project .meta-list__item dt::after {
+  content: " :";
+}
+.single-project .meta-list__item dd {
+  color: #333;
+}
+.single-project__gallery-wrapper {
+  margin-top: 5rem;
+}
+@media (width >= 1024px) {
+  .single-project__gallery-wrapper {
+    margin-top: 9rem;
+  }
+}
+@media (width >= 768px) {
+  .single-project__gallery {
+    -moz-column-count: 2;
+         column-count: 2;
+    -moz-column-gap: 2rem;
+         column-gap: 2rem;
+  }
+}
+@media (width >= 1024px) {
+  .single-project__gallery {
+    -moz-column-count: 3;
+         column-count: 3;
+    -moz-column-gap: 2rem;
+         column-gap: 2rem;
+  }
+}
+.single-project__gallery-item {
+  margin-bottom: 2rem;
+  transition: opacity 0.3s;
+}
+@media (width >= 768px) {
+  .single-project__gallery-item {
+    -moz-column-break-inside: avoid;
+         break-inside: avoid;
+  }
+}
+.single-project__gallery-item:hover {
+  opacity: 0.8;
+}
+.single-project__gallery-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  background-color: #fafafa;
+}
+
+.related-works {
+  margin-top: 7rem;
+  padding-top: 7rem;
+  background-color: #fafafa;
+  padding-bottom: 9rem;
+  /* ヘッダーエリア（線、view more、矢印） */
+  /* 左画面端から伸びる線 */
+  /* 左右の矢印ボタン */
+}
+.related-works__inner {
+  max-width: 1500px;
+  width: 88%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.related-works__header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+.related-works__line {
+  height: 1px;
+  background-color: #333;
+  width: 100px;
+  margin-left: calc(50% - 50vw);
+  flex-grow: 1;
+  margin-right: 20px;
+}
+.related-works__link {
+  font-size: 13px;
+  color: #333;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  margin-right: auto;
+  transition: opacity 0.3s;
+}
+.related-works__link:hover {
+  opacity: 0.6;
+}
+.related-works__nav {
+  display: flex;
+  gap: 15px;
+}
+.related-works__nav button {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.related-works__nav button:hover {
+  background: #333;
+  color: #fff;
+  border-color: #333;
+}
+.related-works .js-related-slider {
+  margin-right: calc(50% - 50vw);
+  padding-right: calc(50vw - 50%);
+  overflow: hidden;
 }
 /*# sourceMappingURL=style.css.map */

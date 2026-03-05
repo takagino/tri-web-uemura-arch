@@ -1,55 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // --- ハンバーガーメニューの制御 ---
-  const header = document.querySelector('.header');
-  const hamburger = document.getElementById('js-hamburger');
-  const menu = document.getElementById('js-menu');
-  const body = document.body;
-  const links = document.querySelectorAll('.overlay__item a');
-
-  if (hamburger && menu) {
-    const toggleMenu = () => {
-      const isOpen = hamburger.getAttribute('aria-expanded') === 'true';
-
-      if (isOpen) {
-        hamburger.setAttribute('aria-expanded', 'false');
-        menu.setAttribute('aria-hidden', 'true');
-        body.classList.remove('is-open');
-      } else {
-        hamburger.setAttribute('aria-expanded', 'true');
-        menu.setAttribute('aria-hidden', 'false');
-        body.classList.add('is-open');
-      }
-    };
-
-    hamburger.addEventListener('click', toggleMenu);
-
-    menu.addEventListener('click', (e) => {
-      if (e.target === menu) {
-        toggleMenu();
-      }
-    });
-
-    if (links.length > 0) {
-      links.forEach((link) => {
-        link.addEventListener('click', () => {
-          if (hamburger.getAttribute('aria-expanded') === 'true') {
-            toggleMenu();
-          }
-        });
-      });
-    }
-  }
-
-  // スクロールアニメーション
-  const animateElements = document.querySelectorAll('[data-animate]');
-  if (animateElements.length > 0) {
-    const observerOptions = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0.2,
-    };
-
-    const observer = new IntersectionObserver((entries, observer) => {
+  // --- スクロールアニメーション共通処理 ---
+  const fadeObserver = new IntersectionObserver(
+    (entries, observer) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const delay = entry.target.dataset.delay || 0;
@@ -59,104 +11,110 @@ document.addEventListener('DOMContentLoaded', () => {
           observer.unobserve(entry.target);
         }
       });
-    }, observerOptions);
+    },
+    { root: null, rootMargin: '0px', threshold: 0.2 },
+  );
 
-    animateElements.forEach((el) => observer.observe(el));
-  }
+  const observeElements = (elements) => {
+    elements.forEach((el) => fadeObserver.observe(el));
+  };
 
-  const heroSlider = document.querySelector('.js-hero-slider');
-  const currentNum = document.querySelector('.hero__current');
-  const nextNum = document.querySelector('.hero__next-num');
-  const progressBar = document.querySelector('.js-hero-progress');
-  const nextBtn = document.querySelector('.js-hero-next');
+  observeElements(document.querySelectorAll('[data-animate]'));
 
-  if (heroSlider) {
-    const headerOptions = {
-      root: null,
-      rootMargin: '-80px 0px 0px 0px',
-      threshold: 0,
+  // --- ハンバーガーメニューの制御 ---
+  const initHamburger = () => {
+    const hamburger = document.getElementById('js-hamburger');
+    const menu = document.getElementById('js-menu');
+    const body = document.body;
+    const links = document.querySelectorAll('.overlay__item a');
+
+    if (!hamburger || !menu) return;
+
+    const toggleMenu = () => {
+      const isOpen = hamburger.getAttribute('aria-expanded') === 'true';
+      hamburger.setAttribute('aria-expanded', !isOpen);
+      menu.setAttribute('aria-hidden', isOpen);
+      isOpen ? body.classList.remove('is-open') : body.classList.add('is-open');
     };
 
-    const headerObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          header.classList.remove('is-scrolled');
-        } else {
-          header.classList.add('is-scrolled');
-        }
-      });
-    }, headerOptions);
+    hamburger.addEventListener('click', toggleMenu);
+    menu.addEventListener('click', (e) => {
+      if (e.target === menu) toggleMenu();
+    });
 
+    links.forEach((link) => {
+      link.addEventListener('click', () => {
+        if (hamburger.getAttribute('aria-expanded') === 'true') toggleMenu();
+      });
+    });
+  };
+  initHamburger();
+
+  // --- トップページ：ヒーロースライダー＆ヘッダー制御 ---
+  const initHeroSlider = () => {
+    const heroSlider = document.querySelector('.js-hero-slider');
+    const header = document.querySelector('.header');
+
+    if (!heroSlider) return;
+
+    const currentNum = document.querySelector('.hero__current');
+    const nextNum = document.querySelector('.hero__next-num');
+    const progressBar = document.querySelector('.js-hero-progress');
+    const nextBtn = document.querySelector('.js-hero-next');
+
+    const headerObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          entry.isIntersecting
+            ? header.classList.remove('is-scrolled')
+            : header.classList.add('is-scrolled');
+        });
+      },
+      { root: null, rootMargin: '-80px 0px 0px 0px', threshold: 0 },
+    );
     headerObserver.observe(heroSlider);
+
+    const updateSliderNumbers = (s) => {
+      const totalSlides = s.slides.filter(
+        (slide) => !slide.classList.contains('swiper-slide-duplicate'),
+      ).length;
+      const current = s.realIndex + 1;
+      const next = ((s.realIndex + 1) % totalSlides) + 1;
+
+      currentNum.textContent = `0${current}`;
+      nextNum.textContent = `0${next}`;
+    };
 
     const swiper = new Swiper(heroSlider, {
       loop: true,
       speed: 1500,
       effect: 'fade',
       fadeEffect: { crossFade: true },
-      autoplay: {
-        delay: 6000,
-        disableOnInteraction: false,
-      },
+      autoplay: { delay: 6000, disableOnInteraction: false },
       on: {
-        init: function (s) {
-          updateSliderNumbers(s);
-        },
-        slideChange: function (s) {
-          updateSliderNumbers(s);
-        },
+        init: updateSliderNumbers,
+        slideChange: updateSliderNumbers,
         autoplayTimeLeft(s, time, progress) {
           progressBar.style.width = `${(1 - progress) * 100}%`;
         },
       },
     });
 
-    // 番号を更新する共通関数
-    function updateSliderNumbers(s) {
-      const totalSlides = s.slides.filter(
-        (slide) => !slide.classList.contains('swiper-slide-duplicate'),
-      ).length;
+    nextBtn.addEventListener('click', () => swiper.slideNext());
+  };
+  initHeroSlider();
 
-      const current = s.realIndex + 1;
-      const next = ((s.realIndex + 1) % totalSlides) + 1;
+  // --- 実績一覧：AJAX絞り込みとページネーション ---
+  const initWorksAjax = () => {
+    const worksContainer = document.getElementById('js-works-container');
+    const catButtons = document.querySelectorAll('.works__tag-link');
 
-      currentNum.textContent = `0${current}`;
-      nextNum.textContent = `0${next}`;
-    }
+    if (!worksContainer || catButtons.length === 0) return;
 
-    nextBtn.addEventListener('click', () => {
-      swiper.slideNext();
-    });
-  }
-
-  // --- 実績一覧のAJAX（絞り込み＆ページネーション） ---
-  const worksContainer = document.getElementById('js-works-container');
-  const catButtons = document.querySelectorAll('.works__tag-link');
-
-  if (worksContainer && catButtons.length > 0) {
     let currentCat = 0;
     let currentPage = 1;
 
-    const fadeObserver = new IntersectionObserver(
-      (entries, obs) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-animated');
-            obs.unobserve(entry.target);
-          }
-        });
-      },
-      { root: null, rootMargin: '0px', threshold: 0.1 },
-    );
-
-    // 初期ロード時のアニメーション監視
-    document
-      .querySelectorAll('[data-animate]')
-      .forEach((el) => fadeObserver.observe(el));
-
-    // データ取得用関数
     const fetchWorks = async () => {
-      // ロード中の視覚効果（少し薄くする）
       worksContainer.style.opacity = '0.4';
       worksContainer.style.transition = 'opacity 0.3s';
 
@@ -166,7 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
       formData.append('paged', currentPage);
 
       try {
-        // functions.phpで渡したarc_ajax.urlを使用
         const response = await fetch(arc_ajax.url, {
           method: 'POST',
           body: formData,
@@ -174,12 +131,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = await response.json();
 
         if (data.success) {
-          // HTMLを書き換え
           worksContainer.innerHTML = data.data.html;
-
-          // 新しく読み込まれた要素に再度アニメーションをセットする
-          const newItems = worksContainer.querySelectorAll('[data-animate]');
-          newItems.forEach((el) => fadeObserver.observe(el));
+          observeElements(worksContainer.querySelectorAll('[data-animate]'));
         }
       } catch (error) {
         console.error('通信エラー:', error);
@@ -188,39 +141,59 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
 
-    // カテゴリーボタンのクリック処理
     catButtons.forEach((btn) => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
-        // カレントクラスの付け替え
         catButtons.forEach((b) => b.classList.remove('works__tag-current'));
         btn.classList.add('works__tag-current');
 
         currentCat = btn.dataset.catId;
-        currentPage = 1; // カテゴリを変えたら1ページ目に戻す
+        currentPage = 1;
         fetchWorks();
       });
     });
 
-    // ページネーションのクリック処理（後から追加されたHTMLにも反応させるためイベント委譲を使用）
     worksContainer.addEventListener('click', (e) => {
       const pageLink = e.target.closest('.page-numbers:not(.current)');
       if (pageLink) {
         e.preventDefault();
-        const href = pageLink.href;
-
-        // URLの文字列（/page/2/ または ?paged=2）からページ番号を抽出
-        const match = href.match(/paged=(\d+)/) || href.match(/\/page\/(\d+)/);
+        const match =
+          pageLink.href.match(/paged=(\d+)/) ||
+          pageLink.href.match(/\/page\/(\d+)/);
         currentPage = match ? match[1] : 1;
 
         fetchWorks();
-
-        // 任意：ページを切り替えたら、一覧の少し上にスクロールさせる
-        // const worksTop = document.getElementById('works').getBoundingClientRect().top + window.scrollY;
-        // window.scrollTo({ top: worksTop - 100, behavior: 'smooth' });
+        const worksTop =
+          document.getElementById('works').getBoundingClientRect().top +
+          window.scrollY;
+        window.scrollTo({ top: worksTop, behavior: 'smooth' });
       }
     });
-  }
+  };
+  initWorksAjax();
+
+  // --- 詳細ページ：関連記事スライダー ---
+  const initRelatedSlider = () => {
+    const relatedSlider = document.querySelector('.js-related-slider');
+    if (!relatedSlider) return;
+
+    new Swiper(relatedSlider, {
+      loop: true,
+      speed: 800,
+      spaceBetween: 20,
+      slidesPerView: 1.5,
+      autoplay: { delay: 4000, disableOnInteraction: false },
+      navigation: {
+        nextEl: '.js-related-next',
+        prevEl: '.js-related-prev',
+      },
+      breakpoints: {
+        768: { slidesPerView: 2.5, spaceBetween: 30 },
+        1024: { slidesPerView: 3.5, spaceBetween: 40 },
+      },
+    });
+  };
+  initRelatedSlider();
 });
 
 // 理念アニメーション
