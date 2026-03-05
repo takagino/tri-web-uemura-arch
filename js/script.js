@@ -128,6 +128,99 @@ document.addEventListener('DOMContentLoaded', () => {
       swiper.slideNext();
     });
   }
+
+  // --- 実績一覧のAJAX（絞り込み＆ページネーション） ---
+  const worksContainer = document.getElementById('js-works-container');
+  const catButtons = document.querySelectorAll('.works__tag-link');
+
+  if (worksContainer && catButtons.length > 0) {
+    let currentCat = 0;
+    let currentPage = 1;
+
+    const fadeObserver = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-animated');
+            obs.unobserve(entry.target);
+          }
+        });
+      },
+      { root: null, rootMargin: '0px', threshold: 0.1 },
+    );
+
+    // 初期ロード時のアニメーション監視
+    document
+      .querySelectorAll('[data-animate]')
+      .forEach((el) => fadeObserver.observe(el));
+
+    // データ取得用関数
+    const fetchWorks = async () => {
+      // ロード中の視覚効果（少し薄くする）
+      worksContainer.style.opacity = '0.4';
+      worksContainer.style.transition = 'opacity 0.3s';
+
+      const formData = new FormData();
+      formData.append('action', 'arc_load_works');
+      formData.append('cat_id', currentCat);
+      formData.append('paged', currentPage);
+
+      try {
+        // functions.phpで渡したarc_ajax.urlを使用
+        const response = await fetch(arc_ajax.url, {
+          method: 'POST',
+          body: formData,
+        });
+        const data = await response.json();
+
+        if (data.success) {
+          // HTMLを書き換え
+          worksContainer.innerHTML = data.data.html;
+
+          // 新しく読み込まれた要素に再度アニメーションをセットする
+          const newItems = worksContainer.querySelectorAll('[data-animate]');
+          newItems.forEach((el) => fadeObserver.observe(el));
+        }
+      } catch (error) {
+        console.error('通信エラー:', error);
+      } finally {
+        worksContainer.style.opacity = '1';
+      }
+    };
+
+    // カテゴリーボタンのクリック処理
+    catButtons.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        // カレントクラスの付け替え
+        catButtons.forEach((b) => b.classList.remove('works__tag-current'));
+        btn.classList.add('works__tag-current');
+
+        currentCat = btn.dataset.catId;
+        currentPage = 1; // カテゴリを変えたら1ページ目に戻す
+        fetchWorks();
+      });
+    });
+
+    // ページネーションのクリック処理（後から追加されたHTMLにも反応させるためイベント委譲を使用）
+    worksContainer.addEventListener('click', (e) => {
+      const pageLink = e.target.closest('.page-numbers:not(.current)');
+      if (pageLink) {
+        e.preventDefault();
+        const href = pageLink.href;
+
+        // URLの文字列（/page/2/ または ?paged=2）からページ番号を抽出
+        const match = href.match(/paged=(\d+)/) || href.match(/\/page\/(\d+)/);
+        currentPage = match ? match[1] : 1;
+
+        fetchWorks();
+
+        // 任意：ページを切り替えたら、一覧の少し上にスクロールさせる
+        // const worksTop = document.getElementById('works').getBoundingClientRect().top + window.scrollY;
+        // window.scrollTo({ top: worksTop - 100, behavior: 'smooth' });
+      }
+    });
+  }
 });
 
 // 理念アニメーション

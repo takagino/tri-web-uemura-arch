@@ -100,10 +100,10 @@ $breakpoints: (
 // =================================================================
 html {
   scroll-behavior: smooth;
-  font-size: rem(12);
+  font-size: rem(14);
 
   @include mq(tablet) {
-    font-size: rem(14);
+    font-size: rem(15);
   }
 
   @include mq(desktop) {
@@ -139,7 +139,7 @@ img {
   z-index: 9999;
 
   &__inner {
-    @include inner();
+    @include inner(1500px);
     padding: $space-m 0;
   }
 
@@ -319,7 +319,7 @@ body:has(.hamburger[aria-expanded='true']) {
   font-size: rem(14);
 
   &__inner {
-    @include inner();
+    @include inner(1500px);
     display: grid;
     row-gap: $space-s;
 
@@ -594,7 +594,7 @@ body:has(.hamburger[aria-expanded='true']) {
 }
 
 .concept {
-  padding: $space-xxl 0;
+  padding: $space-xxl 0 $space-xl;
 
   &__inner {
     @include inner(rem(750));
@@ -611,10 +611,174 @@ body:has(.hamburger[aria-expanded='true']) {
 }
 
 .works {
-  padding-bottom: $space-xxl;
+  padding: $space-xl 0 $space-xxl;
 
   &__inner {
     @include inner();
+  }
+
+  &__title {
+    font-size: rem(24);
+    font-weight: bold;
+
+    &-group {
+      display: grid;
+      grid-auto-flow: column;
+      justify-content: start;
+      gap: $space-s;
+      margin-bottom: $space-s;
+    }
+  }
+
+  &__tag {
+    display: flex;
+    flex-direction: column;
+    gap: $space-s;
+    margin-bottom: $space-l;
+
+    &:has(.works__tag-link:hover) .works__tag-link:not(:hover) {
+      opacity: 0.3;
+    }
+
+    &-group {
+      display: grid;
+      grid-template-columns: rem(60) 1fr;
+      gap: $space-s;
+    }
+
+    &-label {
+      font-size: rem(14);
+      color: #888;
+
+      &::after {
+        content: '/';
+        display: inline-block;
+        margin-left: $space-xs;
+        color: #ccc;
+      }
+    }
+
+    &-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: rem(10) rem(20);
+    }
+
+    &-link {
+      cursor: pointer;
+      font-size: rem(15);
+      transition: opacity 0.3s;
+      position: relative;
+
+      &.works__tag-current::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background-color: #333;
+      }
+    }
+  }
+
+  &__posts {
+    display: grid;
+    gap: $space-l $space-m;
+    grid-template-columns: repeat(auto-fill, minmax(rem(300), 1fr));
+  }
+
+  &__pagination {
+    margin-top: $space-xl;
+    text-align: center;
+
+    ul.page-numbers {
+      display: inline-flex;
+      align-items: center;
+      gap: $space-m;
+
+      li {
+        display: flex;
+        align-items: center;
+      }
+
+      a.page-numbers,
+      span.page-numbers {
+        font-size: rem(15);
+        color: #aaa;
+        padding: $space-xs;
+        position: relative;
+        transition:
+          color 0.4s ease,
+          transform 0.4s cubic-bezier(0.2, 1, 0.2, 1);
+
+        &:hover {
+          color: #333;
+        }
+      }
+
+      span.current {
+        color: #333;
+        font-weight: bold;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: rem(12);
+          height: 1px;
+          background-color: #333;
+        }
+      }
+
+      .prev,
+      .next {
+        color: #333;
+        font-size: rem(18);
+
+        &:hover {
+          background: transparent;
+        }
+      }
+
+      .prev:hover {
+        transform: translateX(-4px);
+      }
+
+      .next:hover {
+        transform: translateX(4px);
+      }
+    }
+  }
+}
+
+.post {
+  a {
+    display: block;
+  }
+
+  &__img {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    margin-bottom: $space-s;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+  }
+
+  &:hover {
+    .post__img img {
+      transform: scale(1.08);
+    }
+    .post__title {
+      opacity: 0.7;
+    }
   }
 }
 

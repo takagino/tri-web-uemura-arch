@@ -85,10 +85,7 @@ function arc_enqueue_scripts()
   // JS
   wp_enqueue_script('swiper', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js', array(), null, true);
   wp_enqueue_script('arc-script', get_theme_file_uri('/js/script.js'), array('jquery', 'swiper'), $js_version, true);
-
-  if (is_front_page()) {
-    wp_enqueue_script('instagram-script', get_theme_file_uri('/js/instagram.js'), array('jquery'), $js_version, true);
-  }
+  wp_localize_script('arc-script', 'arc_ajax', array('url' => admin_url('admin-ajax.php')));
 }
 add_action('wp_enqueue_scripts', 'arc_enqueue_scripts');
 
@@ -210,6 +207,73 @@ if (function_exists('acf_add_options_page')) {
     'icon_url'   => 'dashicons-admin-home', // 建築サイト向けのアイコン
   ));
 }
+
+function arc_get_works_html($cat_id = 0, $paged = 1)
+{
+  $args = array(
+    'post_type'      => 'post',
+    'posts_per_page' => 3,
+    'paged'          => $paged,
+  );
+  // カテゴリーが「全て(0)」以外の場合のみ絞り込み条件を追加
+  if ($cat_id > 0) {
+    $args['cat'] = $cat_id;
+  }
+
+  $works_query = new WP_Query($args);
+
+  if ($works_query->have_posts()) :
+    echo '<div class="works__posts">';
+    while ($works_query->have_posts()) : $works_query->the_post();
+?>
+      <article class="post" data-animate="fade-up">
+        <a href="<?php the_permalink(); ?>">
+          <div class="post__img">
+            <?php if (has_post_thumbnail()) : ?>
+              <?php the_post_thumbnail('large'); ?>
+            <?php else : ?>
+              <img src="<?php echo esc_url(get_theme_file_uri('/img/dummy.jpg')); ?>" alt="no-image">
+            <?php endif; ?>
+          </div>
+          <h3 class="post__title"><?php the_title(); ?></h3>
+        </a>
+      </article>
+<?php
+    endwhile;
+    echo '</div>';
+
+    // ページネーション出力
+    echo '<div class="works__pagination">';
+    echo paginate_links(array(
+      'total'     => $works_query->max_num_pages,
+      'current'   => $paged,
+      'prev_text' => '<i class="la la-angle-left"></i>',
+      'next_text' => '<i class="la la-angle-right"></i>',
+      'type'      => 'list',
+    ));
+    echo '</div>';
+  else :
+    echo '<p>現在、表示できる実績はありません。</p>';
+  endif;
+
+  wp_reset_postdata();
+}
+
+// JSからのAJAXリクエストを受け取る処理
+function arc_ajax_load_works()
+{
+  $cat_id = isset($_POST['cat_id']) ? intval($_POST['cat_id']) : 0;
+  $paged  = isset($_POST['paged']) ? intval($_POST['paged']) : 1;
+
+  ob_start(); // 出力のバッファリング開始
+  arc_get_works_html($cat_id, $paged); // HTMLを生成
+  $html = ob_get_clean(); // 生成したHTMLを変数に格納
+
+  // JS側にJSON形式で成功レスポンスを返す
+  wp_send_json_success(array('html' => $html));
+}
+add_action('wp_ajax_arc_load_works', 'arc_ajax_load_works'); // ログインユーザー用
+add_action('wp_ajax_nopriv_arc_load_works', 'arc_ajax_load_works'); // 未ログインユーザー用
 
 // Instagram API ルートの登録
 add_action('rest_api_init', function () {

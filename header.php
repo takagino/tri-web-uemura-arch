@@ -13,8 +13,8 @@
     <div class="header__inner">
       <h1 class="header__title">
         <a href="<?php echo esc_url(home_url('/')); ?>">
-          <img class="header__logo header__logo--default" src="<?php echo esc_url(get_theme_file_uri('/img/logo.webp')); ?>" alt="植村康平建築設計事務所">
-          <img class="header__logo header__logo--white" src="<?php echo esc_url(get_theme_file_uri('/img/logowhite.png')); ?>" alt="植村康平建築設計事務所">
+          <img class="header__logo header__logo--default" src="<?php echo esc_url(get_theme_file_uri('/images/logo.webp')); ?>" alt="植村康平建築設計事務所">
+          <img class="header__logo header__logo--white" src="<?php echo esc_url(get_theme_file_uri('/images/logowhite.png')); ?>" alt="植村康平建築設計事務所">
         </a>
       </h1>
 

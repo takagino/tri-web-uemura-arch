@@ -7,12 +7,12 @@
                 $args = array(
                     'post_type'      => 'post',
                     'posts_per_page' => 5,
-                    'category'            => 'pickup',
+                    'category_name'  => 'pickup',
                 );
                 $hero_query = new WP_Query($args);
-                if ($hero_query->have_posts()) : $index = 1;
+
+                if ($hero_query->have_posts()) :
                     while ($hero_query->have_posts()) : $hero_query->the_post();
-                        $tags = get_the_tags();
                 ?>
                         <div class="swiper-slide hero__slide">
                             <div class="hero__image">
@@ -42,10 +42,11 @@
                                 </div>
                             </div>
                         </div>
-                <?php $index++;
+                <?php
                     endwhile;
                     wp_reset_postdata();
-                endif; ?>
+                endif;
+                ?>
             </div>
 
             <div class="hero__controls">
@@ -54,7 +55,7 @@
                     <span class="hero__bar-inner js-hero-progress"></span>
                 </div>
                 <button type="button" class="hero__next js-hero-next">
-                    <span class="hero__next-num">0<?php echo $hero_query->post_count; ?></span>
+                    <span class="hero__next-num">0<?php echo esc_html($hero_query->post_count); ?></span>
                 </button>
             </div>
 
@@ -66,55 +67,86 @@
             </div>
         </div>
     </section>
-    <section class="concept" data-animate="fade-up">
-        <div class="concept__inner">
-            <h2 class="concept__title">豊かな商い、快適な暮らしを育む、良質なデザイン</h2>
-            <div class="concept__text">
-                <p>建築は、場所に暮らしや商いを生み出し、その蓄積が都市をつくります。</p>
-                <p>植村康平建築設計事務所では、良質な空間を提案し、暮らしを豊かにし、商いを支え、穏やかで住み心地の良い、やわらかな都市を目指します。</p>
-                <p>当事務所は1名の建築家と2名のデザイナーからなる専門家集団で、アトリエとしての提案力とチームとしての組織力を活かし、100㎡から2,000㎡程度の建築を得意とし、どんな場所・どんな用途にも対応可能です。</p>
-                <p>また、建築にとどまらない幅広いデザイン活動として、まちの仕組みづくりやアート企画に取り組んでおり、「ニシヤマナガヤ」や「暮らせる図書館」、「未完美術館」、「なごや裏山芸術祭」の運営などを通じて、まちづくりにも関わっています。</p>
-                <p>パートナーとして、夢を膨らませ、唯一無二の空間を形にします。</p>
+
+    <?php
+    $concept_title = get_field('concept-title');
+    $concept_text  = get_field('concept-text');
+
+    if ($concept_title || $concept_text) :
+    ?>
+        <section class="concept">
+            <div class="concept__inner">
+                <?php if ($concept_title) : ?>
+                    <h2 class="concept__title" data-animate="fade-up"><?php echo esc_html($concept_title); ?></h2>
+                <?php endif; ?>
+
+                <?php if ($concept_text) : ?>
+                    <div class="concept__text" data-animate="fade-up">
+                        <?php echo wp_kses_post($concept_text); ?>
+                    </div>
+                <?php endif; ?>
             </div>
-        </div>
-    </section>
-    <section id="works" class="works" data-animate="fade-up">
+        </section>
+    <?php endif; ?>
+
+    <section id="works" class="works">
         <div class="works__inner">
-            <h2 class="works__title">all works</h2>
-            <div class="works__tag">
-                <a href="#" class="works__tag-link works__tag-current">
-                    全て
-                </a>
-                <a href="#" class="works__tag-link">
-                    住宅
-                </a>
-
-                <a href="#" class="works__tag-link">
-                    店舗
-                </a>
-
-                <a href="#" class="works__tag-link">
-                    リノベーション
-                </a>
-
-                <a href="#" class="works__tag-link">
-                    まちづくり
-                </a>
-
-                <a href="#" class="works__tag-link">
-                    その他
-                </a>
+            <div class="works__title-group" data-animate="fade-up">
+                <h2 class="works__title">works</h2>
+                <div class="works__all">
+                    <button type="button" class="works__tag-link works__tag-current" data-cat-id="0">
+                        all
+                    </button>
+                </div>
             </div>
-            <div class="works__posts">
-                <article class="post">
-                    <a href="content.html">
-                        <div class="post__img">
-                            <img src="./img/1.jpg" alt="へへへのお部屋の画像です">
+
+            <div class="works__tag" data-animate="fade-up">
+                <?php
+                $exclude_slugs = array('exclude', 'pickup');
+                $exclude_ids   = array_reduce($exclude_slugs, function ($carry, $slug) {
+                    $cat = get_category_by_slug($slug);
+                    if ($cat) {
+                        $carry[] = $cat->term_id;
+                    }
+                    return $carry;
+                }, array());
+
+                $parent_categories = get_categories(array(
+                    'parent'     => 0,
+                    'hide_empty' => false,
+                    'exclude'    => $exclude_ids,
+                ));
+
+                foreach ($parent_categories as $parent_cat) :
+                    $child_categories = get_categories(array(
+                        'parent'     => $parent_cat->term_id,
+                        'hide_empty' => false,
+                        'exclude'    => $exclude_ids,
+                    ));
+
+                    if (!empty($child_categories)) :
+                ?>
+                        <div class="works__tag-group">
+                            <span class="works__tag-label">
+                                <?php echo esc_html($parent_cat->name); ?>
+                            </span>
+
+                            <div class="works__tag-items">
+                                <?php foreach ($child_categories as $child_cat) : ?>
+                                    <button type="button" class="works__tag-link" data-cat-id="<?php echo esc_attr($child_cat->term_id); ?>">
+                                        <?php echo esc_html($child_cat->name); ?>
+                                    </button>
+                                <?php endforeach; ?>
+                            </div>
                         </div>
-                        <h3 class="post__title">へへへのお部屋</h3>
-                        <p class="post__tag">category</p>
-                    </a>
-                </article>
+                <?php
+                    endif;
+                endforeach;
+                ?>
+            </div>
+
+            <div id="js-works-container">
+                <?php arc_get_works_html(0, 1); ?>
             </div>
         </div>
     </section>
