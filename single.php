@@ -34,8 +34,10 @@
                             'size'       => 'works-size',
                             'date'       => 'works-date',
                             'contractor' => 'works-contractor',
-                            'garden'     => 'works-garden', // 【修正】元のコードでdtがcontractorになっていたのを修正
+                            'garden'     => 'works-garden',
                             'photo'      => 'works-photo',
+                            'graphic design'      => 'works-graphic',
+                            'note'      => 'works-note',
                         ];
 
                         foreach ($meta_items as $label => $field_name) :

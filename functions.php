@@ -70,7 +70,7 @@ function arc_enqueue_scripts()
   wp_dequeue_style('wp-block-library-theme');
 
   wp_enqueue_script('swiper', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js', [], null, true);
-  wp_enqueue_script('arc-script', get_theme_file_uri('/js/script.js'), ['jquery', 'swiper'], $js_version, true);
+  wp_enqueue_script('arc-script', get_theme_file_uri('/assets/js/script.js'), ['jquery', 'swiper'], $js_version, true);
   wp_localize_script('arc-script', 'arc_ajax', ['url' => admin_url('admin-ajax.php')]);
 }
 add_action('wp_enqueue_scripts', 'arc_enqueue_scripts');
@@ -185,7 +185,7 @@ function arc_get_works_html($cat_id = 0, $paged = 1)
 {
   $args = [
     'post_type'      => 'post',
-    'posts_per_page' => 3,
+    'posts_per_page' => 12,
     'paged'          => $paged,
   ];
 

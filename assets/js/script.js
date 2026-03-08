@@ -115,8 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPage = 1;
 
     const fetchWorks = async () => {
-      worksContainer.style.opacity = '0.4';
-      worksContainer.style.transition = 'opacity 0.3s';
+      worksContainer.classList.add('is-loading');
 
       const formData = new FormData();
       formData.append('action', 'arc_load_works');
@@ -137,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (error) {
         console.error('通信エラー:', error);
       } finally {
-        worksContainer.style.opacity = '1';
+        worksContainer.classList.remove('is-loading');
       }
     };
 
